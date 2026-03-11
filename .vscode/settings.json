@@ -224,6 +224,21 @@
                 }
             ]
         },
+        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+편)": { //편
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#F4B084",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 0px 0px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
         "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+장)": { //장
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
@@ -254,7 +269,52 @@
                 }
             ]
         },
+        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+절의\\d+)": { //절의#
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#92D050",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 0px 0px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+관)": { //관
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#BF8F00",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 0px 0px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
         "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+조)": { //조
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#D9E1F2",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 0px 0px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+조의\\d+)": { //조의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -299,6 +359,20 @@
                 }
             ]
         },
+        "(?![^《》]*》)(?<!《[^《》]*)(\\  [0-9]+\\의\\d+. )" : { //호의#
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#FFB400",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 2px 0px 4px",
+                    "isWholeLine": false
+                }
+            ]
+        },
         "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+목)": { //목
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
@@ -324,10 +398,35 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "3px 0px 0px 0px"
+                    "borderWidth": "2px 0px 0px 0px"
                 }
             ]
-        }
+        },
+        "(?![^《》]*》)(?<!《[^《》]*)(^\\s*[가-하]\\.)": { //가. 나. 다. ...
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#DDEBF7",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 0px 0px 22px",
+                }
+            ]
+        },
+        "(?![^《》]*》)(?<!《[^《》]*)(^\\s* .*)": { //본문 내용
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "fontWeight": "normal",
+                    "color": "#101010" //404040
+                }
+            ]
+        },
     },
     "search.QueryTemplate": "https://search.naver.com/search.naver?query=%SELECTION%", //통합검색
     //노무사 2차 교재 회독용 텍스트 파일 설정_E
