@@ -3,7 +3,7 @@
     "[plaintext]": {
         "editor.fontFamily": "함초롬돋움",
         "editor.fontSize": 13.45,
-        "editor.lineHeight": 1.4,
+        "editor.lineHeight": 1.5,
         "editor.fontWeight": "bold",
         "editor.selectionHighlight": false, //단어 강조 비활성
         "editor.occurrencesHighlight": "off", //단어 강조 비활성
