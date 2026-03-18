@@ -3,7 +3,7 @@
     "[plaintext]": {
         "editor.fontFamily": "함초롬돋움",
         "editor.fontSize": 13.45,
-        "editor.lineHeight": 1.5,
+        "editor.lineHeight": 1.4,
         "editor.fontWeight": "bold",
         "editor.selectionHighlight": false, //단어 강조 비활성
         "editor.occurrencesHighlight": "off", //단어 강조 비활성
@@ -166,7 +166,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "14px 0px 0px 0px"
+                    "borderWidth": "15px 0px 0px 0px"
                 }
             ]
         },
@@ -453,6 +453,21 @@
                 {
                     "fontWeight": "normal",
                     "color": "#101010" //404040
+                }
+            ]
+        },
+        "(?![^《》]*》)(?<!《[^《》]*)대통령령": { //법률의 "대통령령"
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#D4F2FC", //C1ECFB
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 0px 0px",
+                    "isWholeLine": false
                 }
             ]
         },
