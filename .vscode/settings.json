@@ -302,7 +302,7 @@
         "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+관)": { //관
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            //"filterFileRegex": "법령",
             "decorations": [
                 {
                     "backgroundColor": "#BF8F00",
