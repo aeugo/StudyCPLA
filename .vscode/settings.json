@@ -24,6 +24,16 @@
         "editor.guides.indentation": false //들여쓰기 라인 비활성
     },
     "highlight.regexes": {
+        "(?![^《》]*》)(?<!《[^《》]*)(^\\s*－.*)": { //본문 내용
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "fontWeight": "normal",
+                    "color": "#101010" //404040
+                }
+            ]
+        },
         //(?![^《》]*》)(?<!《[^《》]*) <- 전체 정규표현식 앞에 적용하여 《》로 감싼 부분은 배경강조 제외 함 
         "(?![^《》]*》)(?<!《[^《》]*)(Ⅰ\\. |Ⅱ\\. |Ⅲ\\. |Ⅳ\\. |Ⅴ\\. |Ⅵ\\. |Ⅶ\\. |Ⅷ\\. |Ⅸ\\. |Ⅹ\\. |Ⅺ\\. |Ⅻ\\. |XIII\\. |XIV\\. |XV\\. )": { //로마숫자 목차 배경 강조
             "regexFlags": "gm",
@@ -118,16 +128,6 @@
                     //"borderColor": "#FFFFFF",
                     //"borderWidth": "2px 0px 1px 0px",
                     "fontWeight": "normal"
-                }
-            ]
-        },
-        "(?![^《》]*》)(?<!《[^《》]*)(^\\s*－.*)": { //본문 내용
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "decorations": [
-                {
-                    "fontWeight": "normal",
-                    "color": "#101010" //404040
                 }
             ]
         },
@@ -230,7 +230,7 @@
             "filterFileRegex": "법령",
             "decorations": [
                 {
-                    "backgroundColor": "#F4B084",
+                    "backgroundColor": "#FF9FA1",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
