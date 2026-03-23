@@ -420,6 +420,7 @@
         "(?![^《》]*》)(?<!《[^《》]*)(\\ [0-9]+\\) )": { //목 하위 반괄호
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
             "decorations": [
                 {
                     "backgroundColor": "#C6E6A2",
