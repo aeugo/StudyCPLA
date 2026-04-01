@@ -24,7 +24,85 @@
         "editor.guides.indentation": false //들여쓰기 라인 비활성
     },
     "highlight.regexes": {
-        "(?![^《》]*》)(?<!《[^《》]*)(^\\s*－.*)": { //본문 내용
+        "('[^']+')" : { //''로 배경 강조(문장)
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#FFF900",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "15px 0px 0px 0px"
+                }
+            ]
+        },
+        "\"(?:\\\\.|[^\"\\\\])*\"": { //""로 배경 강조(법 조문 번호, 학자)
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#C39BE1",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
+        "(‘[^’]+’)" : { //‘’로 배경 강조(문장 내 강조)
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#FFF900",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
+        "(“[^”]+”)" : { //“”로 배경 강조(판례번호/이론 또는 저서 강조)
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#FF89FF",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
+        "(?![^《》]*》)(〈[^〉]+〉)": { //〈〉로 배경 강조(쟁점, 이슈), 《[^《》]*》 적용 추가
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#CCE0FF",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
+       "(?![^《》]*》)(<[^>]+>)" : { //<>로 배경 강조, 《[^《》]*》 적용 추가
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#E8E8E8",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
+        "(^\\s*－.*)": { //본문 내용
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -34,8 +112,7 @@
                 }
             ]
         },
-        //(?![^《》]*》)(?<!《[^《》]*) <- 전체 정규표현식 앞에 적용하여 《》로 감싼 부분은 배경강조 제외 함 
-        "(?![^《》]*》)(?<!《[^《》]*)(Ⅰ\\. |Ⅱ\\. |Ⅲ\\. |Ⅳ\\. |Ⅴ\\. |Ⅵ\\. |Ⅶ\\. |Ⅷ\\. |Ⅸ\\. |Ⅹ\\. |Ⅺ\\. |Ⅻ\\. |XIII\\. |XIV\\. |XV\\. )": { //로마숫자 목차 배경 강조
+        "《[^《》]*》|(Ⅰ\\. |Ⅱ\\. |Ⅲ\\. |Ⅳ\\. |Ⅴ\\. |Ⅵ\\. |Ⅶ\\. |Ⅷ\\. |Ⅸ\\. |Ⅹ\\. |Ⅺ\\. |Ⅻ\\. |XIII\\. |XIV\\. |XV\\. )": { //로마숫자 목차 배경 강조, 《[^《》]*》 적용 추가
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -49,9 +126,7 @@
                 }
             ]
         },
-        //"(?![^《》]*》)(?<!《[^《》]*)\\n\\s*\\d+\\. ": { //일반숫자 목차 배경 강조
-        "(?![^《》]*》)(?<!《[^《》]*)(\\  [0-9]+\\. )" : {
-
+        "《[^《》]*》|(\\  [0-9]+\\. )" : { //일반숫자 목차 배경 강조, 《[^《》]*》 적용 추가
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -65,7 +140,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)( \\([0-9]+\\) )": { //괄호숫자 목차 배경 강조(양 옆 공백 포함) //"(\\([0-9]+\\))" -> 양 옆 공백 제외
+        "( \\([0-9]+\\) )": { //괄호숫자 목차 배경 강조(양 옆 공백 포함)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -79,7 +154,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\ [①-⑳]\\ )": { //원숫자 목차 배경 강조
+        "(\\ [①-⑳]\\ )": { //원숫자 목차 배경 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -94,7 +169,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(첫째,|둘째,|셋째,|넷째,|다섯째,|여섯째,|일곱째,|여덟째,|아홉째,|열째,)": { //문장 내 첫째, 둘째, 셋쩨... 배경 강조
+        "《[^《》]*》|(첫째,|둘째,|셋째,|넷째,|다섯째,|여섯째,|일곱째,|여덟째,|아홉째,|열째,)": { //문장 내 첫째, 둘째, 셋쩨... 배경 강조, 《[^《》]*》 적용 추가
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -108,7 +183,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(^\\<문제.*)": { //답안의 문제 제목
+        "(^\\<문제.*)": { //답안의 문제 제목
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -117,99 +192,17 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\[(.*?)\\])": { //목차의 법 조문 번호 강조
+        "(\\[(.*?)\\])": { //목차의 법 조문 번호 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
                 {
-                    //"backgroundColor": "#F0F0F0",
                     "color": "#0000FF",
-                    //"borderStyle": "solid",
-                    //"borderColor": "#FFFFFF",
-                    //"borderWidth": "2px 0px 1px 0px",
                     "fontWeight": "normal"
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)‘(?:\\\\’|[\\s\\S])*?’" : { //‘’로 배경 강조(문장 내 강조)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "decorations": [
-                {
-                    "backgroundColor": "#FFF900",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-        "(?![^《》]*》)(?<!《[^《》]*)“(?:\\\\”|[\\s\\S])*?”" : { //“”로 배경 강조(판례번호/이론 또는 저서 강조)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "decorations": [
-                {
-                    "backgroundColor": "#FF89FF",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-        "(?![^《》]*》)(?<!《[^《》]*)'(?:\\\\'|[\\s\\S])*?'" : { //''로 배경 강조(문장)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "decorations": [
-                {
-                    "backgroundColor": "#FFF900",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "15px 0px 0px 0px"
-                }
-            ]
-        },
-        "(?![^《》]*》)(?<!《[^《》]*)\"(?:\\\\.|[^\"\\\\])*\"": { //""로 배경 강조(법 조문 번호, 학자)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "decorations": [
-                {
-                    "backgroundColor": "#C39BE1",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-        "(?![^《》]*》)(?<!《[^《》]*)(〈[^〉]+〉)": { //〈〉로 배경 강조(쟁점, 이슈)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "decorations": [
-                {
-                    "backgroundColor": "#CCE0FF",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-       "(?![^《》]*》)(?<!《[^《》]*)(<[^>]+>)" : { //<>로 배경 강조
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "decorations": [
-                {
-                    "backgroundColor": "#E8E8E8",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\ [㉠-㉭]\\ )": { //원자음 목차 배경 강조
+        "(\\ [㉠-㉭]\\ )": { //원자음 목차 배경 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -224,7 +217,8 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+편)": { //편
+        //----------법령 적용 시작----------
+        "(\\제\\d+편)": { //편
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -239,7 +233,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+장)": { //장
+        "(\\제\\d+장)": { //장
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -254,7 +248,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+장의\\d+)": { //장의#
+        "(\\제\\d+장의\\d+)": { //장의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -269,7 +263,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+절)": { //절
+        "(\\제\\d+절)": { //절
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -284,7 +278,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+절의\\d+)": { //절의#
+        "(\\제\\d+절의\\d+)": { //절의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -299,10 +293,10 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+관)": { //관
+        "(\\제\\d+관)": { //관
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            //"filterFileRegex": "법령",
+            "filterFileRegex": "법령",
             "decorations": [
                 {
                     "backgroundColor": "#BF8F00",
@@ -314,7 +308,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+조)": { //조
+        "(\\제\\d+조)": { //조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -329,7 +323,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+조의\\d+)": { //조의#
+        "(\\제\\d+조의\\d+)": { //조의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -344,7 +338,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+항)": { //항
+        "(\\제\\d+항)": { //항
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -359,7 +353,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+호)": { //호
+        "(\\제\\d+호)": { //호
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -374,9 +368,10 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\  [0-9]+\\의\\d+. )" : { //호의#
+        "(\\  [0-9]+\\의\\d+. )" : { //호의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
             "decorations": [
                 {
                     "backgroundColor": "#FFB400",
@@ -388,7 +383,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\제\\d+목)": { //목
+        "(\\제\\d+목)": { //목
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -403,7 +398,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(^\\s*[가-하]\\.)": { //가. 나. 다. ...
+        "(^\\s*[가-하]\\.)": { //가. 나. 다. ...
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -417,7 +412,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(\\ [0-9]+\\) )": { //목 하위 반괄호
+        "(\\ [0-9]+\\) )": { //목 하위 반괄호
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -432,7 +427,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)「(?:\\\\」|[\\s\\S])*?」" : { //「」 배경 강조(법률 파일의 법률)
+        "「(?:\\\\」|[\\s\\S])*?」" : { //「」 배경 강조(법률 파일의 법률)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -446,7 +441,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)(^\\s* .*)": { //본문 내용
+        "(^\\s* .*)": { //본문 내용
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -457,7 +452,7 @@
                 }
             ]
         },
-        "(?![^《》]*》)(?<!《[^《》]*)대통령령": { //법률의 "대통령령"
+        "대통령령": { //법률의 "대통령령"
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -468,6 +463,16 @@
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
                     "borderWidth": "3px 0px 0px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        //----------법령 적용 종료----------
+        "(《[^《》]*》)": { //《》로 감싼 부분은 흰색으로 배경강조, 다른 배경강조 제외 함
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#FFFFFF",
                     "isWholeLine": false
                 }
             ]
