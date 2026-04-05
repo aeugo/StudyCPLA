@@ -89,6 +89,15 @@
                 }
             ]
         },
+        "(^\\<문제.*)": { //답안의 문제 제목
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "color": "#0000FF"
+                }
+            ]
+        },
        "(?![^《》]*》)(<[^>]+>)" : { //<>로 배경 강조, 《[^《》]*》 적용 추가
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
@@ -180,15 +189,6 @@
                     "borderColor": "#FFFFFF",
                     "borderWidth": "3px 0px 0px 0px",
                     "isWholeLine": false
-                }
-            ]
-        },
-        "(^\\<문제.*)": { //답안의 문제 제목
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "decorations": [
-                {
-                    "color": "#0000FF"
                 }
             ]
         },
