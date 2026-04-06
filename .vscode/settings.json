@@ -338,6 +338,36 @@
                 }
             ]
         },
+        "(\\법 제\\d+조)": { //시행령 내 법 조문 번호
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#D9E1F2",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 0px 0px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        "(\\영 제\\d+조)": { //시행규칙 내 영 조문 번호
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#D9E1F2",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 0px 0px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
         "(\\제\\d+항)": { //항
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
@@ -354,6 +384,21 @@
             ]
         },
         "(\\제\\d+호)": { //호
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#D9E1F2",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 0px 0px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        "(\\제\\d+호의\\d+)": { //제#호의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
