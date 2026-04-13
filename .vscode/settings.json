@@ -53,6 +53,7 @@
         "(‘[^’]+’)" : { //‘’로 배경 강조(문장 내 강조)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "요약|문제|판례|이론|정보", //법령 외 폴더에만 적용
             "decorations": [
                 {
                     "backgroundColor": "#FFF900",
@@ -503,7 +504,7 @@
             "filterFileRegex": "법령",
             "decorations": [
                 {
-                    "backgroundColor": "#D4F2FC", //C1ECFB
+                    "backgroundColor": "#CCFFCC", //D4F2FC, C1ECFB
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
