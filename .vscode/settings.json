@@ -586,7 +586,7 @@
                 }
             ]
         },
-        "( 단서| 전단| 후단)": { //단서, 전단, 후단
+        "( 본문| 단서| 전단| 후단)": { //본문, 단서, 전단, 후단
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
