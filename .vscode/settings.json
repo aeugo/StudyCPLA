@@ -466,7 +466,7 @@
                 }
             ]
         },
-        "\\[[^\\[\\]]*\\]|(\\제\\d+호)": { //호 []안에서는 제외
+        "(?<![률령]\\s)(\\제\\d+호)": { //호 //법률, 령 뒤에 오는 제#호(법률, 시행령 번호)는 제외
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -645,6 +645,21 @@
                 }
             ]
         },
+        // "(률 제\\d+호)": { //
+        //     "regexFlags": "gm",
+        //     "filterLanguageRegex": "plaintext",
+        //     "filterFileRegex": "법령",
+        //     "decorations": [
+        //         {
+        //             "backgroundColor": "#FFFFFF",
+        //             "color": "#000000",
+        //             "borderStyle": "solid",
+        //             "borderColor": "#FFFFFF",
+        //             "borderWidth": "2px 0px 0px 0px",
+        //             "isWholeLine": false
+        //         }
+        //     ]
+        // },
         "(^\\s* .*)": { //본문 내용
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
