@@ -220,6 +220,16 @@
                 }
             ]
         },
+        "(★)": { //별 강조
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "color": "#FF0000",
+                    "isWholeLine": false
+                }
+            ]
+        },
         //----------법령 적용 시작----------
         "(<[^>]+>)" : { //<>
             "regexFlags": "gm",
@@ -645,21 +655,6 @@
                 }
             ]
         },
-        // "(률 제\\d+호)": { //
-        //     "regexFlags": "gm",
-        //     "filterLanguageRegex": "plaintext",
-        //     "filterFileRegex": "법령",
-        //     "decorations": [
-        //         {
-        //             "backgroundColor": "#FFFFFF",
-        //             "color": "#000000",
-        //             "borderStyle": "solid",
-        //             "borderColor": "#FFFFFF",
-        //             "borderWidth": "2px 0px 0px 0px",
-        //             "isWholeLine": false
-        //         }
-        //     ]
-        // },
         "(^\\s* .*)": { //본문 내용
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
