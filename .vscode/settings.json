@@ -387,7 +387,22 @@
                 }
             ]
         },
-        "(\\  [0-9]+\\. )" : { //호(일반숫자)
+        "(\\  [0-9]+\\. )" : { //호
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#EDEDED",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "2px 2px 0px 4px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        "(\\  [0-9]+\\의\\d+. )" : { //의호#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "법령",
@@ -502,21 +517,6 @@
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
                     "borderWidth": "2px 0px 0px 0px",
-                    "isWholeLine": false
-                }
-            ]
-        },
-        "(\\  [0-9]+\\의\\d+. )" : { //호의#
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
-            "decorations": [
-                {
-                    "backgroundColor": "#FFB400",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 2px 0px 4px",
                     "isWholeLine": false
                 }
             ]
