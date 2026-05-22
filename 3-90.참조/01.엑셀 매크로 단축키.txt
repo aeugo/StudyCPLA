@@ -1,0 +1,5 @@
+G : 들여쓰기
+B : 마크다운
+J : 글자수
+P : excuteMacro
+M : MultiFunction(MarkDown)
