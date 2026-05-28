@@ -66,7 +66,7 @@
         "《[^《》]*》|(‘[^’]+’)" : { //‘’로 배경 강조(문장 내 강조)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!법령).)*$", //법령 폴더 제외
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
                     "backgroundColor": "#FFF900",
@@ -102,7 +102,7 @@
        "《[^《》]*》|(<[^>]+>)" : { //<>로 배경 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!법령).)*$", //법령 폴더 제외
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
                     "backgroundColor": "#E8E8E8",
@@ -140,7 +140,7 @@
         "《[^《》]*》|(\\  [0-9]+\\. )" : { //일반숫자 목차 배경 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!법령).)*$", //법령 폴더 제외
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
                     "backgroundColor": "#FFB400",
@@ -169,7 +169,7 @@
         "《[^《》]*》|(\\ [①-⑳]\\ )": { //원숫자 목차 배경 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!법령).)*$", //법령 폴더 제외
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
                     "backgroundColor": "#8CDBF8",
@@ -198,7 +198,7 @@
         "《[^《》]*》|(\\[[^\\]]+\\])": { //목차의 법 조문 번호 강조([])
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!법령).)*$", //법령 폴더 제외
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
                     "color": "#0000FF",
@@ -230,11 +230,11 @@
                 }
             ]
         },
-        //----------법령 적용 시작----------
+        //----------관련법령 적용 시작----------
         "(<[^>]+>)" : { //<>
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "color": "#0000FF",
@@ -245,7 +245,7 @@
         "(\\[[^\\]]+\\])": { //대괄호[]
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "fontWeight": "normal"
@@ -255,7 +255,7 @@
         "(\\제\\d+편)": { //편
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#FF9FA1",
@@ -270,7 +270,7 @@
         "(\\제\\d+장)": { //장
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#FF0000",
@@ -285,7 +285,7 @@
         "(\\제\\d+장의\\d+)": { //장의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#FF0000",
@@ -300,7 +300,7 @@
         "(\\제\\d+절)": { //절
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#92D050",
@@ -315,7 +315,7 @@
         "(\\제\\d+절의\\d+)": { //절의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#92D050",
@@ -330,7 +330,7 @@
         "(\\제\\d+관)": { //관
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#BF8F00",
@@ -345,7 +345,7 @@
         "(\\제\\d+조)": { //조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -360,7 +360,7 @@
         "(\\제\\d+조의\\d+)": { //조의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -375,7 +375,7 @@
         "(\\ [①-⑳]\\ )": { //항(원숫자)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#FCE4D6",
@@ -390,7 +390,7 @@
         "(\\  [0-9]+\\. )" : { //호
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#EDEDED",
@@ -405,7 +405,7 @@
         "(\\  [0-9]+\\의\\d+. )" : { //의호#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#EDEDED",
@@ -420,7 +420,7 @@
         "(^\\s*[가-하]\\.)": { //목
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#DDEBF7",
@@ -434,7 +434,7 @@
         "(\\ [0-9]+\\) )": { //목 하위(반괄호숫자)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#E2EFDA",
@@ -449,7 +449,7 @@
         "(\\법 제\\d+조)": { //시행령 내 법 조문 번호
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -464,7 +464,7 @@
         "(\\영 제\\d+조)": { //시행규칙 내 영 조문 번호
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -479,7 +479,7 @@
         "(\\제\\d+항)": { //항
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -494,7 +494,7 @@
         "(?<![률령]\\s)(\\제\\d+호)": { //호 //법률, 령 뒤에 오는 제#호(법률, 시행령 번호)는 제외
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -509,7 +509,7 @@
         "(\\제\\d+호의\\d+)": { //제#호의#
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -524,7 +524,7 @@
         "([가나다라마바사아자차카타파하]목)": { //가목, 나목, 다목... "벌목", "괄목"과 같은 단어를 배제하기 위해 명시적으로 선언
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -539,7 +539,7 @@
         "(별표 \\d+)": { //별표
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -554,7 +554,7 @@
         "(별표 \\d+의\\d+)": { //별표
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -569,7 +569,7 @@
         "(별지 제\\d+호서식)": { //별지
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -584,7 +584,7 @@
         "(별지 제\\d+호의\\d+서식)": { //별지 ~의
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -599,7 +599,7 @@
         "( 본문| 단서| 전단| 후단)": { //본문, 단서, 전단, 후단
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -614,7 +614,7 @@
         "(\\제\\d+급)": { //급
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#D9E1F2",
@@ -629,7 +629,7 @@
         "「(?:\\\\」|[\\s\\S])*?」" : { //「」 배경 강조(법률 파일의 법률)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#C39BE1",
@@ -643,7 +643,7 @@
         "\\[[^\\[\\]]*\\]|(대통령령|총리령|고용노동부령|보건복지부령|행정안전부령)": { //법률제목의 "대통령령" [] 안에서는 제외
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "backgroundColor": "#b6ffff", //90f2ff
@@ -658,7 +658,7 @@
         "(^\\s* .*)": { //본문 내용
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "법령",
+            "filterFileRegex": "관련법령",
             "decorations": [
                 {
                     "fontWeight": "normal",
