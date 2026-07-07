@@ -1,7 +1,7 @@
 # ==================================================
 # DOC 일괄 처리
 # 1. 모든 DOC 열기
-# 2. SetFormatLegalText 실행
+# 2. SetIndentLegalText 실행
 # 3. 저장
 # 4. TXT 폴더에 UTF-8 TXT 저장
 # ==================================================
@@ -9,7 +9,7 @@
 $folder = Get-Location
 
 # TXT 폴더 생성
-$txtFolder = Join-Path $folder "TXT"
+$txtFolder = Join-Path $folder "AFTER"
 
 if (!(Test-Path $txtFolder)) {
     New-Item -Path $txtFolder -ItemType Directory | Out-Null
@@ -36,7 +36,7 @@ try
 
         # VBA 실행
         Write-Host "[$index/$total] 1. 매크로 실행"
-        $word.Run("SetFormatLegalText") #C:\Users\MainUser\AppData\Roaming\Microsoft\Templates\Normal.dotm
+        $word.Run("SetIndentLegalText") #C:\Users\MainUser\AppData\Roaming\Microsoft\Templates\Normal.dotm
 
         # 저장
         Write-Host "[$index/$total] 2. WORD 저장"
