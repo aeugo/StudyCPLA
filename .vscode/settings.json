@@ -14,6 +14,7 @@
             "comments": false,
             "strings": false
         },
+        "editor.foldingStrategy": "indentation",
         "editor.suggestOnTriggerCharacters": false,
         "editor.wordBasedSuggestions": "off",
         //자동완성 비활성_E
