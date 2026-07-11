@@ -196,17 +196,17 @@
                 }
             ]
         },
-        "《[^《》]*》|(\\[[^\\]]+\\])": { //목차의 법 조문 번호 강조([])
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
-            "decorations": [
-                {
-                    "color": "#0000FF",
-                    "fontWeight": "normal"
-                }
-            ]
-        },
+        // "《[^《》]*》|(\\[[^\\]]+\\])": { //목차의 법 조문 번호 강조([])
+        //     "regexFlags": "gm",
+        //     "filterLanguageRegex": "plaintext",
+        //     "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+        //     "decorations": [
+        //         {
+        //             "color": "#0000FF"
+        //             //"fontWeight": "normal"
+        //         }
+        //     ]
+        // },
         "《[^《》]*》|(\\ [㉠-㉭]\\ )": { //원자음 목차 배경 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
