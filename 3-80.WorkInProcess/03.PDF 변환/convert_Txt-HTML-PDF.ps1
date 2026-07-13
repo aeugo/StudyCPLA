@@ -1,14 +1,12 @@
 $folder = Get-Location
 $afterFolder = Join-Path $folder "AFTER"
-if (!(Test-Path $afterFolder)) 
-{ 
+if (!(Test-Path $afterFolder)) { 
     New-Item -ItemType Directory -Path $afterFolder | Out-Null 
 }
 
 $files = Get-ChildItem -Path $folder -Filter *.txt | Sort-Object Name
 $total = $files.Count
-if ($total -eq 0) 
-{
+if ($total -eq 0) {
     Write-Host "TXT 파일이 없습니다."
     exit 
 }
@@ -46,6 +44,17 @@ function Convert-TxtToHtml {
         $cleanLine = $cleanLine.Replace([string][char]0x2019, "")    # 유니코드 닫는 작은따옴표 (’)
         $cleanLine = $cleanLine.Replace([string][char]0x3008, "")    # 홑화살괄호 여는문자 (〈)
         $cleanLine = $cleanLine.Replace([string][char]0x3009, "")    # 홑화살괄호 닫는문자 (〉)
+
+		# ★, ☆ 빨간색 표시
+		$cleanLine = $cleanLine.Replace(
+			"★",
+			"<span class='star-red'>★</span>"
+		)
+
+		$cleanLine = $cleanLine.Replace(
+			"☆",
+			"<span class='star-red'>☆</span>"
+		)
 
 		$cleanTrimmed = $cleanLine.Trim()
 
@@ -173,6 +182,12 @@ function Convert-TxtToHtml {
         display: inline-block;
         line-height: 1;
     }
+	/*별표 강조*/
+	.star-red{
+		color:#FF0000;
+		font-weight:bold;
+	}
+
 </style>
 </head>
 <body>
