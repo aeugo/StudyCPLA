@@ -70,6 +70,11 @@ function Convert-TxtToHtml {
             $pClass = "normal-text"
         }
 
+		# 문제 제목
+		if($cleanTrimmed -match '^<문제\d') {
+			$pClass = "problem-title"
+		}
+
         # 목차 기호 치환 처리 (정규식 및 반복문 활용)
         $processedText = $cleanLine
 
@@ -144,6 +149,10 @@ function Convert-TxtToHtml {
     .normal-text {
         font-weight: normal;
     }
+	.problem-title{
+		color:#0000FF;
+		font-weight:bold;
+	}
     
     /* 목차 배경 및 세부 여백 조절 디자인 */
     .idx-roman {
