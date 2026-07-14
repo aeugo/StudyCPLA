@@ -42,8 +42,8 @@ function Convert-TxtToHtml {
         $cleanLine = $cleanLine.Replace([string][char]0x201D, "")    # 유니코드 닫는 큰따옴표 (”)
         $cleanLine = $cleanLine.Replace([string][char]0x2018, "")    # 유니코드 여는 작은따옴표 (‘)
         $cleanLine = $cleanLine.Replace([string][char]0x2019, "")    # 유니코드 닫는 작은따옴표 (’)
-        $cleanLine = $cleanLine.Replace([string][char]0x3008, "")    # 홑화살괄호 여는문자 (〈)
-        $cleanLine = $cleanLine.Replace([string][char]0x3009, "")    # 홑화살괄호 닫는문자 (〉)
+        #$cleanLine = $cleanLine.Replace([string][char]0x3008, "")    # 홑화살괄호 여는문자 (〈)
+        #$cleanLine = $cleanLine.Replace([string][char]0x3009, "")    # 홑화살괄호 닫는문자 (〉)
 
 		# ★, ☆ 빨간색 표시
 		$cleanLine = $cleanLine.Replace(
@@ -54,6 +54,23 @@ function Convert-TxtToHtml {
 		$cleanLine = $cleanLine.Replace(
 			"☆",
 			"<span class='star-red'>☆</span>"
+		)
+
+		# 〈...〉 : 쟁점 배경
+		$cleanLine = [regex]::Replace(
+			$cleanLine,
+			'〈.*?〉',
+			{
+				param($m)
+				"<span class='case-blue'>$($m.Value)</span>"
+			}
+		)
+
+		# 《...》 : 강조 없음
+		$cleanLine = [regex]::Replace(
+			$cleanLine,
+			'《([^》]+)》',
+			'$0'
 		)
 
 		$cleanTrimmed = $cleanLine.Trim()
@@ -114,94 +131,101 @@ function Convert-TxtToHtml {
     $htmlContent = @"
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<style>
-    @page {
-        size: A4;
-        margin-top: 1cm;
-        margin-bottom: 1cm;
-        margin-left: 1.3cm;
-        margin-right: 1.3cm;
-    }
-    body {
-        font-family: "함초롬돋움", sans-serif;
-        font-size: 8pt;
-        line-height: 1.6;
-        margin: 0;
-        padding: 0;
-    }
-    p {
-        margin-top: 0px;
-        margin-bottom: 0px;
-        padding: 0;
-        white-space: pre-wrap;
-        word-break: break-all;
-		text-align: justify;       /* 우측면 정렬을 균일하게 맞추는 양끝 정렬 속성 */
-        text-justify: inter-character; /* 글자 간격을 미세 조정하여 공백 불균형 해소 */
-    }
-    .blank-line {
-        height: 8pt;
-    }
-    .bold-text {
-        font-weight: bold;
-    }
-    .normal-text {
-        font-weight: normal;
-    }
-	.problem-title{
-		color:#0000FF;
-		font-weight:bold;
-	}
-    
-    /* 목차 배경 및 세부 여백 조절 디자인 */
-    .idx-roman {
-        background-color: #FF0000;
-        /*color: #FFFFFF;*/
-        padding: 2px 2px 2px 2px;
-        margin-right: 3px;
-        border-radius: 1px;
-        display: inline-block;
-        line-height: 1;
-    }
-    .idx-bracket {
-        background-color: #FFB400;
-        /*color: #FFFFFF;*/
-        padding: 2px 4px 2px 4px;
-        margin-right: 3px;
-        border-radius: 1px;
-        display: inline-block;
-        line-height: 1;
-    }
-    .idx-parenthesis {
-        background-color: #92D050;
-        /*color: #FFFFFF;*/
-        padding: 2px 2.5px 2px 2.5px;
-        margin-right: 3px;
-        border-radius: 1px;
-        display: inline-block;
-        line-height: 1;
-    }
-    .idx-circle {
-        background-color: #8CDBF8;
-        /*color: #FFFFFF;*/
-        padding: 2px 3px 2px 3px;
-        margin-right: 3px;
-        border-radius: 1px;
-        display: inline-block;
-        line-height: 1;
-    }
-	/*별표 강조*/
-	.star-red{
-		color:#FF0000;
-		font-weight:bold;
-	}
+	<head>
+		<meta charset="UTF-8">
+		<style>
+			@page {
+				size: A4;
+				margin-top: 1cm;
+				margin-bottom: 1cm;
+				margin-left: 1.3cm;
+				margin-right: 1.3cm;
+			}
+			body {
+				font-family: "함초롬돋움", sans-serif;
+				font-size: 8pt;
+				line-height: 1.6;
+				margin: 0;
+				padding: 0;
+			}
+			p {
+				margin-top: 0px;
+				margin-bottom: 0px;
+				padding: 0;
+				white-space: pre-wrap;
+				word-break: break-all;
+				text-align: justify; /* 우측면 정렬을 균일하게 맞추는 양끝 정렬 속성 */
+				text-justify: inter-character; /* 글자 간격을 미세 조정하여 공백 불균형 해소 */
+			}
+			.blank-line {
+				height: 8pt;
+			}
+			.bold-text {
+				font-weight: bold;
+			}
+			.normal-text {
+				font-weight: normal;
+			}
+			.problem-title {
+				color:#0000FF;
+				font-weight:bold;
+			}
+			
+			/* 목차 배경 및 세부 여백 조절 디자인 */
+			.idx-roman {
+				background-color: #FF0000;
+				/*color: #FFFFFF;*/
+				padding: 2px 2px 2px 2px;
+				margin-right: 3px;
+				border-radius: 1px;
+				display: inline-block;
+				line-height: 1;
+			}
+			.idx-bracket {
+				background-color: #FFB400;
+				/*color: #FFFFFF;*/
+				padding: 2px 4px 2px 4px;
+				margin-right: 3px;
+				border-radius: 1px;
+				display: inline-block;
+				line-height: 1;
+			}
+			.idx-parenthesis {
+				background-color: #92D050;
+				/*color: #FFFFFF;*/
+				padding: 2px 2.5px 2px 2.5px;
+				margin-right: 3px;
+				border-radius: 1px;
+				display: inline-block;
+				line-height: 1;
+			}
+			.idx-circle {
+				background-color: #8CDBF8;
+				/*color: #FFFFFF;*/
+				padding: 2px 3px 2px 3px;
+				margin-right: 3px;
+				border-radius: 1px;
+				display: inline-block;
+				line-height: 1;
+			}
+			/*별표 강조*/
+			.star-red {
+				color:#FF0000;
+				font-weight:bold;
+			}
+			/*쟁점 강조*/
+			.case-blue {
+				background:#CCE0FF;
+				padding: 0px 1px 2px 1px;
+				border-radius: 1px;
+			}
+		}
 
-</style>
-</head>
-<body>
-    $($htmlLines -join "`n")
-</body>
+		</style>
+	</head>
+	<body>
+		$($htmlLines -join "`n")
+	</body>
 </html>
 "@
 
