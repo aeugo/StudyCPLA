@@ -9,13 +9,13 @@ if (!(Test-Path -LiteralPath $afterFolder)) {
 # -------------------------------------------------------------
 # [단계 1] 사용자 선택 기능 분기 입력창
 # -------------------------------------------------------------
-Write-Host "=========================================================" -ForegroundColor Cyan
-Write-Host "             PDF 변환 및 병합 자동화 프로세스            " -ForegroundColor Cyan
-Write-Host "=========================================================" -ForegroundColor Cyan
+Write-Host "=========================================================" #-ForegroundColor Cyan
+Write-Host "             PDF 변환 및 병합 자동화 프로세스            " #-ForegroundColor Cyan
+Write-Host "=========================================================" #-ForegroundColor Cyan
 
 $keepHighlight = ""
 while ($keepHighlight -notmatch "^[YN]$") {
-    $keepHighlight = (Read-Host "1. 쟁점(〈〉), 법령(""), 판례(“”) 등의 배경 강조를 유지하겠습니까? (Y/N)").ToUpper().Trim()
+    $keepHighlight = (Read-Host "1. 쟁점(〈 〉), 법령(" "), 판례(“ ”) 등의 배경 강조를 유지하겠습니까? (Y/N)").ToUpper().Trim()
 }
 
 $deleteOriginals = ""
@@ -263,7 +263,7 @@ if (Test-Path -LiteralPath $mergedOutputPath) {
         Write-Host ">> 2. 옵션(N)에 따라 개별 원본 PDF 파일들을 그대로 보존합니다." #-ForegroundColor Gray
     }
 } else {
-    Write-Host "[오류] PDF 병합 중 예상치 못한 문제가 발생했습니다." #-ForegroundColor Red
+    Write-Host "[오류] PDF 병합 중 예상치 못한 문제가 발생했습니다." -ForegroundColor Red
 }
 
 Write-Host "`n=========================================================" #-ForegroundColor Cyan
