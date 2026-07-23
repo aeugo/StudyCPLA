@@ -9,9 +9,9 @@ if (!(Test-Path -LiteralPath $afterFolder)) {
 # -------------------------------------------------------------
 # [단계 1] 사용자 선택 기능 분기 입력창
 # -------------------------------------------------------------
-Write-Host "=========================================================" #-ForegroundColor Cyan
-Write-Host "             PDF 변환 및 병합 자동화 프로세스            " #-ForegroundColor Cyan
-Write-Host "=========================================================" #-ForegroundColor Cyan
+Write-Host "========================================================="
+Write-Host "             PDF 변환 및 병합 자동화 프로세스            "
+Write-Host "========================================================="
 
 $keepHighlight = ""
 while ($keepHighlight -notmatch "^[YN]$") {
@@ -51,7 +51,7 @@ if ($total -eq 0) {
 }
 
 # -------------------------------------------------------------
-# [단계 2] HTML 변환 및 마크업 엔진 함수 (N 옵션 시 특수문자 삭제 보완)
+# [단계 2] HTML 변환 및 마크업 엔진 함수
 # -------------------------------------------------------------
 function Convert-TxtToHtml {
     param(
@@ -83,6 +83,7 @@ function Convert-TxtToHtml {
             $cleanLine = $cleanLine.Replace("☆", "<span class='star-red'>☆</span>")
             $cleanLine = [regex]::Replace($cleanLine, '〈.*?〉', { param($m) "<span class='case-blue'>$($m.Value)</span>" })
             $cleanLine = [regex]::Replace($cleanLine, '"([^"]+)"', '<span class="quote-purple">"$1"</span>')
+			$cleanLine = [regex]::Replace($cleanLine, '「.*?」', { param($m) "<span class='quote-purple'>$($m.Value)</span>" })
             $cleanLine = [regex]::Replace($cleanLine, '“([^”]+)”', '<span class="quote-pink">“$1”</span>')
 
             # 기본 작은따옴표만 제거
@@ -91,7 +92,7 @@ function Convert-TxtToHtml {
             $cleanLine = $cleanLine.Replace([string][char]0x2019, "")
         } 
         else {
-            # [핵심 보완] N 옵션: 배경 강조 배제 및 모든 기존 특수문자(따옴표/꺾쇠류) 일괄 완전 소거
+            # N 옵션: 배경 강조 배제 및 모든 기존 특수문자(따옴표/꺾쇠류) 일괄 완전 소거
             $cleanLine = $cleanLine.Replace([string][char]34, "")        # 일반 큰따옴표 (")
             $cleanLine = $cleanLine.Replace([string][char]39, "")        # 일반 작은따옴표 (')
             $cleanLine = $cleanLine.Replace([string][char]0x201C, "")    # 유니코드 여는 큰따옴표 (“)
@@ -101,6 +102,12 @@ function Convert-TxtToHtml {
             $cleanLine = $cleanLine.Replace([string][char]0x3008, "")    # 홑화살괄호 여는문자 (〈)
             $cleanLine = $cleanLine.Replace([string][char]0x3009, "")    # 홑화살괄호 닫는문자 (〉)
         }
+
+        $cleanLine = [regex]::Replace(
+            $cleanLine,
+            '(<제\d+[^>]*>)',
+            '<span class="chapter">$1</span>'
+        )
 
         $cleanTrimmed = $cleanLine.Trim()
 
@@ -142,6 +149,7 @@ function Convert-TxtToHtml {
             .bold-text { font-weight: bold; }
             .normal-text { font-weight: normal; }
             .problem-title { color:#0000FF; font-weight:bold; }
+            .chapter { color: #FF0000; font-weight: bold; }
             .idx-roman { background-color: #FF0000; padding: 2px; margin-right: 3px; border-radius: 1px; display: inline-block; line-height: 1; }
             .idx-bracket { background-color: #FFB400; padding: 2px 4px; margin-right: 3px; border-radius: 1px; display: inline-block; line-height: 1; }
             .idx-parenthesis { background-color: #92D050; padding: 2px 2.5px; margin-right: 3px; border-radius: 1px; display: inline-block; line-height: 1; }
@@ -209,15 +217,15 @@ foreach ($file in $files) {
         $createdPdfPaths += $pdfPath
     }
 
-    Write-Host "  3. 변환 완료" #-ForegroundColor Green
-	Write-Host ""
+    Write-Host "  3. 변환 완료"
+    Write-Host ""
     $idx++
 }
 
 # -------------------------------------------------------------
-# [단계 3] Ghostscript 활용 PDF 병합 (Start-Process 분리 안정화 버전)
+# [단계 3] Ghostscript 활용 PDF 병합
 # -------------------------------------------------------------
-Write-Host "`n[단계 3] Ghostscript 결합 및 병합 작업 시작..." #-ForegroundColor Cyan
+Write-Host "`n[단계 3] Ghostscript 결합 및 병합 작업 시작..."
 
 $mergeList = Get-ChildItem -LiteralPath $afterFolder -Filter *.pdf | 
              Where-Object { $_.FullName -ne $mergedOutputPath } | 
@@ -249,23 +257,23 @@ $null = $gsProcess.Start()
 $gsProcess.WaitForExit()
 
 if (Test-Path -LiteralPath $mergedOutputPath) {
-    Write-Host ">> 전체 병합 완료 : $mergedOutputPath" #-ForegroundColor Green
+    Write-Host ">> 전체 병합 완료 : $mergedOutputPath"
     
     if ($deleteOriginals -eq "Y") {
-        Write-Host ">> 2. 옵션(Y)에 따라 개별 원본 PDF 파일 청소를 시작합니다." #-ForegroundColor Yellow
+        Write-Host ">> 2. 옵션(Y)에 따라 개별 원본 PDF 파일 청소를 시작합니다."
         foreach ($pdf in $mergeList) {
             if (Test-Path -LiteralPath $pdf.FullName) {
                 Remove-Item -LiteralPath $pdf.FullName -Force
             }
         }
-        Write-Host ">> 개별 원본 PDF 파일 삭제 완료." #-ForegroundColor Green
+        Write-Host ">> 개별 원본 PDF 파일 삭제 완료."
     } else {
-        Write-Host ">> 2. 옵션(N)에 따라 개별 원본 PDF 파일들을 그대로 보존합니다." #-ForegroundColor Gray
+        Write-Host ">> 2. 옵션(N)에 따라 개별 원본 PDF 파일들을 그대로 보존합니다."
     }
 } else {
     Write-Host "[오류] PDF 병합 중 예상치 못한 문제가 발생했습니다." -ForegroundColor Red
 }
 
-Write-Host "`n=========================================================" #-ForegroundColor Cyan
-Write-Host " 모든 자동화 변환 및 제어 공정이 성공적으로 종결되었습니다." #-ForegroundColor Cyan
-Write-Host "=========================================================" #-ForegroundColor Cyan
+Write-Host "`n=============================================================="
+Write-Host " 모든 자동화 변환 및 제어 공정이 성공적으로 종결되었습니다."
+Write-Host "=============================================================="
