@@ -30,11 +30,12 @@
             "filterLanguageRegex": "plaintext",
             "decorations": [
                 {
-                    "backgroundColor": "#FFF900",
+                    "backgroundColor": "#FFFC00", //FFFC00
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "15px 0px 0px 0px"
+                    //"borderWidth": "15px 0px 0px 0px" //밑줄용
+                    "borderWidth": "3px 0px 0px 0px" //전체 형광펜 효과
                 }
             ]
         },
@@ -70,7 +71,7 @@
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
-                    "backgroundColor": "#FFF900",
+                    "backgroundColor": "#F0DF00",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
