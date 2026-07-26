@@ -116,6 +116,34 @@
                 }
             ]
         },
+        "《[^《》]*》|(\\<인사.[^>]+>)" : { //<>로 배경 강조
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+            "decorations": [
+                {
+                    //"backgroundColor": "#E8E8E8",
+                    "color": "#FF0000",
+                    //"borderStyle": "solid",
+                    //"borderColor": "#FFFFFF",
+                    //"borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
+        "《[^《》]*》|(\\<경조.[^>]+>)" : { //<>로 배경 강조
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+            "decorations": [
+                {
+                    //"backgroundColor": "#E8E8E8",
+                    "color": "#FF0000",
+                    //"borderStyle": "solid",
+                    //"borderColor": "#FFFFFF",
+                    //"borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
         // "《[^《》]*》|(<[^>]+>)" : { //<>로 배경 강조
         //     "regexFlags": "gm",
         //     "filterLanguageRegex": "plaintext",
