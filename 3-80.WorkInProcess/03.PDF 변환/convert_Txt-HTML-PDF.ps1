@@ -121,6 +121,18 @@ function Convert-TxtToHtml {
             '<span class="chapter">$1</span>'
         )
 
+		$cleanLine = [regex]::Replace(
+            $cleanLine,
+            '(<보충[^>]*>)',
+            '<span class="chapter">$1</span>'
+        )
+
+		$cleanLine = [regex]::Replace(
+            $cleanLine,
+            '(<입문[^>]*>)',
+            '<span class="chapter">$1</span>'
+        )
+
         $cleanTrimmed = $cleanLine.Trim()
 
         if ([string]::IsNullOrEmpty($cleanTrimmed)) {

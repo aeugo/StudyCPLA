@@ -102,7 +102,7 @@
             ]
         },
        //"《[^《》]*》|(<[^>]+>)" : { //<>로 배경 강조
-       "《[^《》]*》|(\\<제\\d+.[^>]+>)" : { //<>로 배경 강조
+       "《[^《》]*》|(\\<제\\d+.[^>]+>)" : { //<>로 배경 강조(장.절)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
@@ -116,7 +116,7 @@
                 }
             ]
         },
-        "《[^《》]*》|(\\<인사.[^>]+>)" : { //<>로 배경 강조
+        "《[^《》]*》|(\\<인사.[^>]+>)" : { //<>로 배경 강조(인사)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
@@ -130,7 +130,35 @@
                 }
             ]
         },
-        "《[^《》]*》|(\\<경조.[^>]+>)" : { //<>로 배경 강조
+        "《[^《》]*》|(\\<경조.[^>]+>)" : { //<>로 배경 강조(경조)
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+            "decorations": [
+                {
+                    //"backgroundColor": "#E8E8E8",
+                    "color": "#FF0000",
+                    //"borderStyle": "solid",
+                    //"borderColor": "#FFFFFF",
+                    //"borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
+        "《[^《》]*》|(\\<보충[^>]+>)" : { //<>로 배경 강조(보충)
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+            "decorations": [
+                {
+                    //"backgroundColor": "#E8E8E8",
+                    "color": "#FF0000",
+                    //"borderStyle": "solid",
+                    //"borderColor": "#FFFFFF",
+                    //"borderWidth": "3px 0px 0px 0px"
+                }
+            ]
+        },
+        "《[^《》]*》|(\\<입문[^>]+>)" : { //<>로 배경 강조(입문)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
