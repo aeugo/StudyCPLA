@@ -10,7 +10,7 @@ if (!(Test-Path -LiteralPath $afterFolder)) {
 # [단계 1] 사용자 선택 기능 분기 입력창
 # -------------------------------------------------------------
 Write-Host "========================================================="
-Write-Host "             PDF 변환 및 병합 자동화 프로세스            "
+Write-Host "             PDF 변환 및 병합 자동화 프로세스             "
 Write-Host "========================================================="
 
 $keepHighlight = ""
@@ -60,66 +60,72 @@ function Convert-TxtToHtml {
     )
 
     $lines = Get-Content -LiteralPath $filePath -Encoding UTF-8
-    $htmlLines = @()
-    $inDoubleAngle = $false
+    $fullText = $lines -join "`n"
+    $fullText = [System.Net.WebUtility]::HtmlDecode($fullText)
 
-    foreach ($line in $lines) {
-        $cleanLine = $line
-        $cleanLine = [System.Net.WebUtility]::HtmlDecode($cleanLine)
+    if ($highlightOption -eq "Y") {
+        # 1. MatchCollection을 통해 《...》 내부 원본 문자열 추출
+        $regexDoubleAngle = [regex]'《[\s\S]*?》'
+        $matches = $regexDoubleAngle.Matches($fullText)
+        $protectedTexts = @()
 
-        if ($highlightOption -eq "Y") {
-            # Y 옵션: 배경 강조 적용 및 《》 내부 보호 조치 진행
-            if ($cleanLine.Contains("《")) { $inDoubleAngle = $true }
-
-            if ($inDoubleAngle) {
-                $cleanLine = $cleanLine.Replace('"', [string][char]0x0060)
-                $cleanLine = $cleanLine.Replace([string][char]0x201C, [string][char]0x0060)
-                $cleanLine = $cleanLine.Replace([string][char]0x201D, [string][char]0x0060)
-            }
-
-            if ($cleanLine.Contains("》")) { $inDoubleAngle = $false }
-
-            $cleanLine = $cleanLine.Replace("★", "<span class='star-red'>★</span>")
-            $cleanLine = $cleanLine.Replace("☆", "<span class='star-red'>☆</span>")
-            $cleanLine = [regex]::Replace($cleanLine, '〈.*?〉', { param($m) "<span class='case-blue'>$($m.Value)</span>" })
-            $cleanLine = [regex]::Replace($cleanLine, '"([^"]+)"', '<span class="quote-purple">"$1"</span>')
-			$cleanLine = [regex]::Replace($cleanLine, '「.*?」', { param($m) "<span class='quote-purple'>$($m.Value)</span>" })
-            $cleanLine = [regex]::Replace($cleanLine, '“([^”]+)”', '<span class="quote-pink">“$1”</span>')
-
-            # 기본 작은따옴표만 제거
-            $cleanLine = $cleanLine.Replace([string][char]39, "")
-            $cleanLine = $cleanLine.Replace([string][char]0x2018, "")
-            $cleanLine = $cleanLine.Replace([string][char]0x2019, "")
-        } 
-        else {
-            # N 옵션: 배경 강조 배제 및 모든 기존 특수문자(따옴표/꺾쇠류) 일괄 완전 소거
-            $cleanLine = $cleanLine.Replace([string][char]34, "")        # 일반 큰따옴표 (")
-            $cleanLine = $cleanLine.Replace([string][char]39, "")        # 일반 작은따옴표 (')
-            $cleanLine = $cleanLine.Replace([string][char]0x201C, "")    # 유니코드 여는 큰따옴표 (“)
-            $cleanLine = $cleanLine.Replace([string][char]0x201D, "")    # 유니코드 닫는 큰따옴표 (”)
-            $cleanLine = $cleanLine.Replace([string][char]0x2018, "")    # 유니코드 여는 작은따옴표 (‘)
-            $cleanLine = $cleanLine.Replace([string][char]0x2019, "")    # 유니코드 닫는 작은따옴표 (’)
-            $cleanLine = $cleanLine.Replace([string][char]0x3008, "")    # 홑화살괄호 여는문자 (〈)
-            $cleanLine = $cleanLine.Replace([string][char]0x3009, "")    # 홑화살괄호 닫는문자 (〉)
+        foreach ($m in $matches) {
+            $protectedTexts += $m.Value
         }
 
-        $cleanLine = [regex]::Replace(
-            $cleanLine,
-            '(<제\d+[^>]*>)',
-            '<span class="chapter">$1</span>'
-        )
+        # 2. 마스킹 진행 (1:1 플레이스홀더 치환)
+        for ($i = 0; $i -lt $protectedTexts.Count; $i++) {
+            $placeholder = "___EXCLUDED_DOUBLE_ANGLE_${i}___"
+            $index = $fullText.IndexOf($protectedTexts[$i])
+            if ($index -ge 0) {
+                $fullText = $fullText.Remove($index, $protectedTexts[$i].Length).Insert($index, $placeholder)
+            }
+        }
 
-		$cleanLine = [regex]::Replace(
-            $cleanLine,
-            '(<인사[^>]*>)',
-            '<span class="chapter">$1</span>'
-        )
+        # 3. 배경 강조 스타일 적용
+        $fullText = $fullText.Replace("★", "<span class='star-red'>★</span>")
+        $fullText = $fullText.Replace("☆", "<span class='star-red'>☆</span>")
+        $fullText = [regex]::Replace($fullText, '〈.*?〉', { param($m) "<span class='case-blue'>$($m.Value)</span>" })
+        $fullText = [regex]::Replace($fullText, '"([^"]+)"', '<span class="quote-purple">"$1"</span>')
+        $fullText = [regex]::Replace($fullText, '「.*?」', { param($m) "<span class='quote-purple'>$($m.Value)</span>" })
+        $fullText = [regex]::Replace($fullText, '“([^”]+)”', '<span class="quote-pink">“$1”</span>')
 
-		$cleanLine = [regex]::Replace(
-            $cleanLine,
-            '(<경조[^>]*>)',
-            '<span class="chapter">$1</span>'
-        )
+        # 4. 작은따옴표 소거
+        $fullText = $fullText.Replace([string][char]39, "")
+        $fullText = $fullText.Replace([string][char]0x2018, "")
+        $fullText = $fullText.Replace([string][char]0x2019, "")
+
+        # 5. 마스킹해둔 《...》 원본 복원
+        for ($k = 0; $k -lt $protectedTexts.Count; $k++) {
+            $placeholder = "___EXCLUDED_DOUBLE_ANGLE_${k}___"
+            $restoredContent = $protectedTexts[$k].Replace("`n", "<br>")
+            $fullText = $fullText.Replace($placeholder, $restoredContent)
+        }
+    } 
+    else {
+        # N 옵션: 배경 강조 배제 및 모든 특수문자 소거
+        $fullText = $fullText.Replace([string][char]34, "")
+        $fullText = $fullText.Replace([string][char]39, "")
+        $fullText = $fullText.Replace([string][char]0x201C, "")
+        $fullText = $fullText.Replace([string][char]0x201D, "")
+        $fullText = $fullText.Replace([string][char]0x2018, "")
+        $fullText = $fullText.Replace([string][char]0x2019, "")
+        $fullText = $fullText.Replace([string][char]0x3008, "")
+        $fullText = $fullText.Replace([string][char]0x3009, "")
+    }
+
+    # 개별 행 단위 처리 진행
+    $processedLines = $fullText -split "`n"
+    $htmlLines = @()
+
+    foreach ($line in $processedLines) {
+        $cleanLine = $line
+
+        $cleanLine = [regex]::Replace($cleanLine, '(<제\d+[^>]*>)', '<span class="chapter">$1</span>')
+        $cleanLine = [regex]::Replace($cleanLine, '(<인사[^>]*>)', '<span class="chapter">$1</span>')
+        $cleanLine = [regex]::Replace($cleanLine, '(<경조[^>]*>)', '<span class="chapter">$1</span>')
+        $cleanLine = [regex]::Replace($cleanLine, '(<보충[^>]*>)', '<span class="chapter">$1</span>')
+        $cleanLine = [regex]::Replace($cleanLine, '(<입문[^>]*>)', '<span class="chapter">$1</span>')
 
         $cleanTrimmed = $cleanLine.Trim()
 
@@ -137,7 +143,7 @@ function Convert-TxtToHtml {
             $pClass = "problem-title"
         }
 
-        # 목차 기호 치환 처리 (정규식 매칭)
+        # 목차 기호 치환 처리
         $processedText = $cleanLine
         $processedText = [regex]::Replace($processedText, '^( *)([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]+\.)', '$1<span class="idx-roman">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)(\d{1,2}\.)', '$1<span class="idx-bracket">$2</span>')
@@ -147,7 +153,7 @@ function Convert-TxtToHtml {
         $htmlLines += "<p class='$pClass'>$processedText</p>"
     }
 
-    # HTML 구조 정의 (CSS 렌더링 스펙 포함)
+    # HTML 구조 정의 (형광펜 기법 적용으로 하단 배경만 정밀 이동)
     $htmlContent = @"
 <!DOCTYPE html>
 <html>
@@ -155,21 +161,97 @@ function Convert-TxtToHtml {
         <meta charset="UTF-8">
         <style>
             @page { size: A4; margin: 1cm 1.3cm 1cm 1.3cm; }
-            body { font-family: "함초롬돋움", sans-serif; font-size: 8pt; line-height: 1.6; margin: 0; padding: 0; }
+            body { font-family: "함초롬돋움", sans-serif; font-size: 7.7pt; line-height: 1.6; margin: 0; padding: 0; }
             p { margin: 0; padding: 0; white-space: pre-wrap; word-break: break-all; text-align: justify; text-justify: inter-character; }
             .blank-line { height: 8pt; }
             .bold-text { font-weight: bold; }
             .normal-text { font-weight: normal; }
-            .problem-title { color:#0000FF; font-weight:bold; }
+
+            /*공통 수직 정렬 오차 방지 프로퍼티 정의*/
+            span {
+                vertical-align: baseline;
+                line-height: inherit;
+            }
+
+            .problem-title { color: #0000FF; font-weight:bold; }
             .chapter { color: #FF0000; font-weight: bold; }
-            .idx-roman { background-color: #FF0000; padding: 2px; margin-right: 3px; border-radius: 1px; display: inline-block; line-height: 1; }
-            .idx-bracket { background-color: #FFB400; padding: 2px 4px; margin-right: 3px; border-radius: 1px; display: inline-block; line-height: 1; }
-            .idx-parenthesis { background-color: #92D050; padding: 2px 2.5px; margin-right: 3px; border-radius: 1px; display: inline-block; line-height: 1; }
-            .idx-circle { background-color: #8CDBF8; padding: 2px 3px; margin-right: 3px; border-radius: 1px; display: inline-block; line-height: 1; }
-            .star-red { color:#FF0000; font-weight:bold; }
-            .case-blue { background:#CCE0FF; padding: 0px 1px 2px 1px; border-radius: 1px; }
-            .quote-purple { background:#C39BE1; padding: 0px 1px 2px 1px; border-radius: 1px; }
-            .quote-pink { background:#FF89FF; padding: 0px 1px 2px 1px; border-radius: 1px; }
+            .star-red { color: #FF0000; font-weight:bold; }
+
+            /*목차 형광펜*/
+            .idx-roman {
+                background: linear-gradient(to top, #FF0000 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 1px;
+                padding-bottom: 1px;
+                padding-left: 0px;
+                padding-right: 1px;
+            }
+            .idx-bracket {
+                background: linear-gradient(to top, #FFB400 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 1px;
+                padding-bottom: 1px;
+                padding-left: 2.5px;
+                padding-right: 2.5px;
+            }
+            .idx-parenthesis {
+                background: linear-gradient(to top, #92D050 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.6px;
+                padding-bottom: 1.2px;
+                padding-left: 0.8px;
+                padding-right: 1px;
+            }
+            .idx-circle {
+                background: linear-gradient(to top, #8CDBF8 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 1.2px;
+                padding-right: 2.2px;
+            }
+
+            /*쟁점 형광펜*/
+            .case-blue {
+                background: linear-gradient(to top, #CCE0FF 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 0.5px;
+                padding-right: 0.5px;
+            }
+            /*법령 형광펜*/
+            .quote-purple {
+                background: linear-gradient(to top, #C39BE1 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 0.5px;
+                padding-right: 0.5px;
+            }
+            /*판례 형광펜*/
+            .quote-pink {
+                background: linear-gradient(to top, #FF89FF 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 0.5px;
+                padding-right: 0.5px;
+            }
         </style>
     </head>
     <body>$($htmlLines -join "`n")</body>
