@@ -43,7 +43,7 @@ function Convert-TxtToHtml {
         $cleanTrimmed = $cleanLine.Trim()
 
         if ([string]::IsNullOrEmpty($cleanTrimmed)) {
-            $htmlLines += "<p class='blank-line'>&nbsp;</p>"
+            $htmlLines += '<p class="blank-line">&nbsp;</p>'
             continue
         }
 
@@ -64,10 +64,10 @@ function Convert-TxtToHtml {
         # [Step 2] 일반 법령/인용 구문 배경색 치환
         # -----------------------------------------------------
         # 1) 제목 마크업 매핑 (연파랑 강조)
-        $processedText = [regex]::Replace($processedText, '〈.*?〉', { param($m) "<span class='case-blue'>$($m.Value)</span>" })
+        $processedText = [regex]::Replace($processedText, '〈.*?〉', { param($m) "<span class=`"case-blue`">$($m.Value)</span>" })
 
-        # 1-1) 참조법령 등 인용 마크업 매핑 (보라색 강조)
-        $processedText = [regex]::Replace($processedText, '「.*?」', { param($m) "<span class='quote-purple'>$($m.Value)</span>" })
+        # 1-1) 법령 전체 인용 마크업 매핑 (보라색 강조)
+        $processedText = [regex]::Replace($processedText, '「.*?」', { param($m) "<span class=`"corner-bracket`">$($m.Value)</span>" })
 
         # 2) 지정된 법령/부령 명칭 배경강조 적용
         $processedText = [regex]::Replace($processedText, '(대통령령|총리령|고용노동부령|보건복지부령|행정안전부령)', '<span class="quote-cyan">$1</span>')
@@ -84,9 +84,14 @@ function Convert-TxtToHtml {
         $processedText = [regex]::Replace($processedText, '^( *)(\d{1,2}\))', '$1<span class="idx-item2">$2</span>') #목하위
 
         # 4) 본문 내 참조 구문 통합 하이라이트 치환
-        $processedText = [regex]::Replace($processedText, '(?<!<[^>]*)(?!다목적댐|특정단어2)(?:(?:법|영)\s+)?((?:제\d+조(?:의\d+)*|제\d+항|제\d+호(?:의\d+)*)\s+(?:본문|단서|전단|후단)|제\d+조(?:의\d+)*|제\d+항|제\d+호(?:의\d+)*|(?:가|나|다|라|마|바|사|아|자|차|카|타|파|하)목|별지\s*제\d+호(?:의\d+)*\s*서식|별표\s*\d+(?:의\d+)*|제\d+급)', '<span class="idx-article">$0</span>')
-        #$processedText = [regex]::Replace($processedText, '(?<!<[^>]*)(?:(?:법|영)\s+)?((?:(?:제\d+조(?:의\d+)*(?:제\d+항)*(?:제\d+호(?:의\d+)*(?:[가-하]목)?)*|제\d+항(?:제\d+호(?:의\d+)*(?:[가-하]목)?)*|제\d+호(?:의\d+)*(?:[가-하]목)?)\s+(?:본문|단서|전단|후단)|제\d+조(?:의\d+)*(?:제\d+항)*(?:제\d+호(?:의\d+)*(?:[가-하]목)?)*|제\d+항(?:제\d+호(?:의\d+)*(?:[가-하]목)?)*|제\d+호(?:의\d+)*(?:[가-하]목)?|(?<![가-힣])(?:가|나|다|라|마|바|사|아|자|차|카|타|파|하)목(?![가-힣])|별지\s*제\d+호(?:의\d+)*\s*서식|별표\s*\d+(?:의\d+)*|제\d+급))', '<span class="idx-article">$0</span>')
-
+        #$processedText = [regex]::Replace($processedText, '(?<!<[^>]*)(?!다목적댐|특정단어2)(?:(?:법|영)\s+)?((?:제\d+조(?:의\d+)*|제\d+항|제\d+호(?:의\d+)*)\s+(?:본문|단서|전단|후단)|제\d+조(?:의\d+)*|제\d+항|제\d+호(?:의\d+)*|(?:가|나|다|라|마|바|사|아|자|차|카|타|파|하)목|별지\s*제\d+호(?:의\d+)*\s*서식|별표\s*\d+(?:의\d+)*|제\d+급)', '<span class="idx-article">$0</span>')
+        $processedText = [regex]::Replace($processedText, '(?<!<[^>]*)(?<!class="[^"]*)(?!다목적댐|특정단어2)(?:(?:법|영)\s+)?((?:제\d+조(?:의\d+)*|제\d+항|제\d+호(?:의\d+)*)\s+(?:본문|단서|전단|후단)|제\d+편|제\d+장(?:의\\d+)*|제\d+절(?:의\\d+)*|제\d+관|제\d+조(?:의\d+)*|제\d+항|제\d+호(?:의\d+)*|(?:가|나|다|라|마|바|사|아|자|차|카|타|파|하)목|별지\s*제\d+호(?:의\d+)*\s*서식|별표\s*\d+(?:의\d+)*|제\d+급)(?![^<]*<\/span>)', {
+            param($m)
+            # 이미 태그에 감싸진 상태인 경우 치환 제외
+            if ($m.Value -match '<[^>]+>') { return $m.Value }
+            return "<span class=`"idx-article`">$($m.Value)</span>"
+        })
+        
         # -----------------------------------------------------
         # [Step 3] 대괄호 [ ] 영역 매칭 및 내부 모든 HTML 태그 완벽 제거
         # -----------------------------------------------------
@@ -94,7 +99,7 @@ function Convert-TxtToHtml {
             param($match)
             $inside = $match.Groups[1].Value
             $cleanInside = [regex]::Replace($inside, '<[^>]+>', '')
-            return "<span class=""no-bg"">[$cleanInside]</span>"
+            return "<span class=`"no-bg`">[$cleanInside]</span>"
         })
 
         # -----------------------------------------------------
@@ -103,7 +108,7 @@ function Convert-TxtToHtml {
         $processedText = $processedText.Replace('__BLUE_START__', '<span class="quote-blue">&lt;')
         $processedText = $processedText.Replace('__BLUE_END__', '&gt;</span>')
 
-        $htmlLines += "<p class='$pClass'>$processedText</p>"
+        $htmlLines += "<p class=`"$pClass`">$processedText</p>"
     }
 
     # HTML 구조 정의
@@ -144,7 +149,7 @@ function Convert-TxtToHtml {
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 0.5px;
                 padding-right: 0.5px;
             }
@@ -154,107 +159,117 @@ function Convert-TxtToHtml {
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 0.5px;
                 padding-right: 0.5px;
             }
+            /*편*/
             .idx-part {
+                background: linear-gradient(to top, #66CCFF 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 1px;
+                padding-bottom: 1.5px;
+                padding-left: 0.5px;
+                padding-right: 0.5px;
+            }
+            /*장*/
+            .idx-chapter {
                 background: linear-gradient(to top, #FF9FA1 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 0.5px;
                 padding-right: 0.5px;
             }
-            .idx-chapter {
-                background: linear-gradient(to top, #FF0000 90%, transparent 90%);
-                display: inline;
-                box-decoration-break: clone;
-                -webkit-box-decoration-break: clone;
-                padding-top: 1px;
-                padding-bottom: 2px;
-                padding-left: 0.5px;
-                padding-right: 0.5px;
-            } 
+            /*절*/
             .idx-section {
-                background: linear-gradient(to top, #92D050 90%, transparent 90%);
+                background: linear-gradient(to top, #ADE57B 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 0.5px;
                 padding-right: 0.5px;
             }
+            /*관*/
             .idx-subsection {
-                background: linear-gradient(to top, #BF8F00 90%, transparent 90%);
+                background: linear-gradient(to top, #DCB406 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 0.5px;
                 padding-right: 0.5px;
-            } 
+            }
+            /*조*/
             .idx-article {
                 background: linear-gradient(to top, #D9E1F2 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 0.5px;
                 padding-right: 0.5px;
-            } 
+            }
+            /*항*/
             .idx-paragraph { 
                 background: linear-gradient(to top, #FCE4D6 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 1.5px;
                 padding-right: 2.5px;
-            } 
+            }
+            /*호*/
             .idx-subparagraph {
                 background: linear-gradient(to top, #EDEDED 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 3px;
                 padding-right: 2.5px;
-            } 
+            }
+            /*목*/
             .idx-item {
                 background: linear-gradient(to top, #DDEBF7 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 0.2px;
                 padding-right: 0.2px;
             }
+            /*반괄호*/
             .idx-item2 {
                 background: linear-gradient(to top, #E2EFDA 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 3px;
                 padding-right: 2.3px;
-            } 
-            .quote-purple { 
-                background: linear-gradient(to top, #C39BE1 90%, transparent 90%);
+            }
+            /*법령 전체 인용*/
+            .corner-bracket { 
+                background: linear-gradient(to top, #C382D2 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
                 padding-top: 1px;
-                padding-bottom: 2px;
+                padding-bottom: 1.5px;
                 padding-left: 0.5px;
                 padding-right: 0.5px;
             } 
@@ -303,7 +318,7 @@ foreach ($file in $files) {
     $null = $process.Start()
     $process.WaitForExit()
 
-    Start-Sleep -Milliseconds 300
+    #Start-Sleep -Milliseconds 300
 
     if (Test-Path -LiteralPath $tempHtmlPath) { Remove-Item -LiteralPath $tempHtmlPath -Force }
 
@@ -315,3 +330,4 @@ foreach ($file in $files) {
 Write-Host "=============================================================="
 Write-Host " 모든 PDF 변환 공정이 성공적으로 종결되었습니다."
 Write-Host "=============================================================="
+Write-Host ""

@@ -30,12 +30,12 @@
             "filterLanguageRegex": "plaintext",
             "decorations": [
                 {
-                    "backgroundColor": "#FFFC00", //FFFC00
+                    "backgroundColor": "#FFFC00",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
                     //"borderWidth": "15px 0px 0px 0px" //밑줄용
-                    "borderWidth": "2px 0px 0px 0px" //전체 형광펜 효과 //Top Right Bottom Left(상, 우, 하, 좌)
+                    "borderWidth": "3px 0px 1px 0px" //전체 형광펜 효과 //Top Right Bottom Left(상, 우, 하, 좌)
                 }
             ]
         },
@@ -48,7 +48,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px"
+                    "borderWidth": "3px 0px 1px 0px"
                 }
             ]
         },
@@ -57,11 +57,11 @@
             "filterLanguageRegex": "plaintext",
             "decorations": [
                 {
-                    "backgroundColor": "#C39BE1",
+                    "backgroundColor": "#DDB8DE",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px"
+                    "borderWidth": "3px 0px 1px 0px"
                 }
             ]
         },
@@ -71,11 +71,11 @@
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
-                    "backgroundColor": "#DCDCFF", //F0DF00
+                    "backgroundColor": "#DCB406",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px"
+                    "borderWidth": "3px 0px 1px 0px"
                 }
             ]
         },
@@ -88,7 +88,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px"
+                    "borderWidth": "3px 0px 1px 0px"
                 }
             ]
         },
@@ -101,91 +101,16 @@
                 }
             ]
         },
-       //"《[^《》]*》|(<[^>]+>)" : { //<>로 배경 강조
-       "《[^《》]*》|(\\<제\\d+.[^>]+>)" : { //<>로 배경 강조(장.절)
+        "《[^《》]*》|((\\<제\\d+.[^>]+>)|(\\<인사[^>]+>)|(\\<경조[^>]+>)|(\\<보충[^>]+>)|(\\<입문[^>]+>))": {
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+            "filterFileRegex": "^((?!관련법령).)*$",
             "decorations": [
                 {
-                    //"backgroundColor": "#E8E8E8",
-                    "color": "#FF0000",
-                    //"borderStyle": "solid",
-                    //"borderColor": "#FFFFFF",
-                    //"borderWidth": "3px 0px 0px 0px"
+                    "color": "#FF0000"
                 }
             ]
         },
-        "《[^《》]*》|(\\<인사.[^>]+>)" : { //<>로 배경 강조(인사)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
-            "decorations": [
-                {
-                    //"backgroundColor": "#E8E8E8",
-                    "color": "#FF0000",
-                    //"borderStyle": "solid",
-                    //"borderColor": "#FFFFFF",
-                    //"borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-        "《[^《》]*》|(\\<경조.[^>]+>)" : { //<>로 배경 강조(경조)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
-            "decorations": [
-                {
-                    //"backgroundColor": "#E8E8E8",
-                    "color": "#FF0000",
-                    //"borderStyle": "solid",
-                    //"borderColor": "#FFFFFF",
-                    //"borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-        "《[^《》]*》|(\\<보충[^>]+>)" : { //<>로 배경 강조(보충)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
-            "decorations": [
-                {
-                    //"backgroundColor": "#E8E8E8",
-                    "color": "#FF0000",
-                    //"borderStyle": "solid",
-                    //"borderColor": "#FFFFFF",
-                    //"borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-        "《[^《》]*》|(\\<입문[^>]+>)" : { //<>로 배경 강조(입문)
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
-            "decorations": [
-                {
-                    //"backgroundColor": "#E8E8E8",
-                    "color": "#FF0000",
-                    //"borderStyle": "solid",
-                    //"borderColor": "#FFFFFF",
-                    //"borderWidth": "3px 0px 0px 0px"
-                }
-            ]
-        },
-        // "《[^《》]*》|(<[^>]+>)" : { //<>로 배경 강조
-        //     "regexFlags": "gm",
-        //     "filterLanguageRegex": "plaintext",
-        //     "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
-        //     "decorations": [
-        //         {
-        //             "backgroundColor": "#E8E8E8",
-        //             //"color": "#FF0000",
-        //             "borderStyle": "solid",
-        //             "borderColor": "#FFFFFF",
-        //             "borderWidth": "3px 0px 0px 0px"
-        //         }
-        //     ]
-        // },
         "(^\\s*－.*)(?=★|$)": { //본문 내용(”－”(빼기 아님)로 시작), 별표 제외 //(^\\s*－.*)(?=★|$), (^\\s*－[^★].*)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
@@ -205,7 +130,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 4px 0px 0px",
+                    "borderWidth": "3px 4px 1px 0px",
                     "isWholeLine": false
                 }
             ]
@@ -216,11 +141,11 @@
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
-                    "backgroundColor": "#FFB400",
+                    "backgroundColor": "#FFC000", //FFB400
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 2px 0px 4px",
+                    "borderWidth": "3px 2px 1px 4px",
                     "isWholeLine": false
                 }
             ]
@@ -234,7 +159,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 3px 0px 4px",
+                    "borderWidth": "3px 3px 1px 4px",
                     "isWholeLine": false
                 }
             ]
@@ -249,7 +174,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 1px 0px 2px",
+                    "borderWidth": "3px 1px 1px 2px",
                     "isWholeLine": false
                 }
             ]
@@ -263,7 +188,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
+                    "borderWidth": "3px 0px 1px 0px",
                     "isWholeLine": false
                 }
             ]
@@ -288,7 +213,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 1px 0px 2px",
+                    "borderWidth": "3px 1px 1px 2px",
                     "isWholeLine": false
                 }
             ]
@@ -325,7 +250,22 @@
                 }
             ]
         },
-        "^(\\제\\d+편)": { //편
+        "(\\제\\d+편)": { //편
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "관련법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#66CCFF",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 1px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        "(\\제\\d+장(?:의\\d+)?)" : { //장(가지포함)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "관련법령",
@@ -335,87 +275,42 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
+                    "borderWidth": "3px 0px 1px 0px",
                     "isWholeLine": false
                 }
             ]
         },
-        "^(\\제\\d+장)": { //장
+        "(\\제\\d+절(?:의\\d+)?)" : { //절(가지포함)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "관련법령",
             "decorations": [
                 {
-                    "backgroundColor": "#FF0000",
+                    "backgroundColor": "#ADE57B",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
+                    "borderWidth": "3px 0px 1px 0px",
                     "isWholeLine": false
                 }
             ]
         },
-        "^(\\제\\d+장의\\d+)": { //장의#
+        "(\\제\\d+관)": { //관
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "관련법령",
             "decorations": [
                 {
-                    "backgroundColor": "#FF0000",
+                    "backgroundColor": "#DCB406",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
+                    "borderWidth": "3px 0px 1px 0px",
                     "isWholeLine": false
                 }
             ]
         },
-        "^(\\제\\d+절)": { //절
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "관련법령",
-            "decorations": [
-                {
-                    "backgroundColor": "#92D050",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
-                    "isWholeLine": false
-                }
-            ]
-        },
-        "^(\\제\\d+절의\\d+)": { //절의#
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "관련법령",
-            "decorations": [
-                {
-                    "backgroundColor": "#92D050",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
-                    "isWholeLine": false
-                }
-            ]
-        },
-        "^(\\제\\d+관)": { //관
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "관련법령",
-            "decorations": [
-                {
-                    "backgroundColor": "#BF8F00",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
-                    "isWholeLine": false
-                }
-            ]
-        },
-        "^(\\제\\d+조)": { //조
+        "(\\제\\d+조(?:의\\d+)?)" : { //조(가지포함)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "관련법령",
@@ -425,27 +320,12 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
+                    "borderWidth": "3px 0px 1px 0px",
                     "isWholeLine": false
                 }
             ]
         },
-        "^(\\제\\d+조의\\d+)": { //조의#
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "관련법령",
-            "decorations": [
-                {
-                    "backgroundColor": "#D9E1F2",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
-                    "isWholeLine": false
-                }
-            ]
-        },
-        "(\\ [①-⑳]\\ )": { //항(원숫자)
+        "(\\ [①-⑳]\\ )": { //항
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "관련법령",
@@ -455,12 +335,12 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 1px 0px 2px",
+                    "borderWidth": "3px 1px 1px 2px",
                     "isWholeLine": false
                 }
             ]
         },
-        "(\\  [0-9]+\\. )" : { //호
+        "\\<[^\\<\\>]*\\>|\\[[^\\[\\]]*\\]|(\\ [0-9]+(?:\\의\\d+)?\\. )" : { //호(가지포함, <> [] 내 제외)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "관련법령",
@@ -470,22 +350,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 2px 0px 4px",
-                    "isWholeLine": false
-                }
-            ]
-        },
-        "(\\  [0-9]+\\의\\d+. )" : { //의호#
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "관련법령",
-            "decorations": [
-                {
-                    "backgroundColor": "#EDEDED",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 2px 0px 4px",
+                    "borderWidth": "3px 1px 1px 1px",
                     "isWholeLine": false
                 }
             ]
@@ -500,7 +365,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 22px",
+                    "borderWidth": "3px 0px 1px 22px",
                 }
             ]
         },
@@ -514,12 +379,13 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 2px 0px 1px",
+                    "borderWidth": "3px 2px 1px 1px",
                     "isWholeLine": false
                 }
             ]
         },
-        "(?!다목적댐|특정단어2)(?:(?:법|영)\\s+)?(?:(?:제\\d+조(?:의\\d+)*|제\\d+항|제\\d+호(?:의\\d+)*)\\s+(?:본문|단서|전단|후단)|제\\d+조(?:의\\d+)*|제\\d+항|제\\d+호(?:의\\d+)*|(?:가|나|다|라|마|바|사|아|자|차|카|타|파|하)목|별지\\s*제\\d+호(?:의\\d+)*\\s*서식|별표\\s*\\d+(?:의\\d+)*|제\\d+급)(?![^\\[\\n]*\\])": {
+        //본문 내 조문번호 배경 강조
+        "(?!다목적댐|제외할단어추가)(?:(?:법|영)\\s+)?(?:(?:제\\d+조(?:의\\d+)*|제\\d+항|제\\d+호(?:의\\d+)*)\\s+(?:본문|단서|전단|후단)|제\\d+조(?:의\\d+)*|제\\d+항|제\\d+호(?:의\\d+)*|(?:가|나|다|라|마|바|사|아|자|차|카|타|파|하)목|별지\\s*제\\d+호(?:의\\d+)*\\s*서식|별표\\s*\\d+(?:의\\d+)*|제\\d+급)(?![^\\[\\n]*\\])": {
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "관련법령",
@@ -529,7 +395,23 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
+                    "borderWidth": "3px 0px 1px 0px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        //본문 내 조문번호 배경 강조(분리)
+        "(?<!^\\s*)(제\\d+편|제\\d+장(?:의\\d+)*|제\\d+절(?:의\\d+)*|제\\d+관)": {
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "관련법령",
+            "decorations": [
+                {
+                    "backgroundColor": "#D9E1F2",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 1px 0px",
                     "isWholeLine": false
                 }
             ]
@@ -544,7 +426,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px"
+                    "borderWidth": "3px 0px 1px 0px"
                 }
             ]
         },
@@ -558,7 +440,7 @@
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
-                    "borderWidth": "2px 0px 0px 0px",
+                    "borderWidth": "3px 0px 1px 0px",
                     "isWholeLine": false
                 }
             ]

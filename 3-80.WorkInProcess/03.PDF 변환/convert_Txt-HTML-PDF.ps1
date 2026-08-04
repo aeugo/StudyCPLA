@@ -10,17 +10,22 @@ if (!(Test-Path -LiteralPath $afterFolder)) {
 # [단계 1] 사용자 선택 기능 분기 입력창
 # -------------------------------------------------------------
 Write-Host "========================================================="
-Write-Host "             PDF 변환 및 병합 자동화 프로세스             "
+Write-Host "              PDF 변환 및 병합 자동화 프로세스              "
 Write-Host "========================================================="
 
 $keepHighlight = ""
 while ($keepHighlight -notmatch "^[YN]$") {
-    $keepHighlight = (Read-Host "1. 쟁점(〈 〉), 법령(" "), 판례(“ ”) 등의 배경 강조를 유지하겠습니까? (Y/N)").ToUpper().Trim()
+    $keepHighlight = (Read-Host "1. [쟁점, 법령(학자), 판례(저술)]의 배경 강조를 유지하겠습니까? (Y/N)").ToUpper().Trim()
+}
+
+$keepKeywordHighlight = ""
+while ($keepKeywordHighlight -notmatch "^[YN]$") {
+    $keepKeywordHighlight = (Read-Host "2. [키워드, 중요 키워드]의 배경 강조를 유지하겠습니까? (Y/N)").ToUpper().Trim()
 }
 
 $deleteOriginals = ""
 while ($deleteOriginals -notmatch "^[YN]$") {
-    $deleteOriginals = (Read-Host "2. PDF 파일 병합 후 원본 PDF 파일을 삭제하겠습니까? (Y/N)").ToUpper().Trim()
+    $deleteOriginals = (Read-Host "3. PDF 파일 병합 후 원본 PDF 파일을 삭제하겠습니까? (Y/N)").ToUpper().Trim()
 }
 Write-Host "---------------------------------------------------------"
 
@@ -56,62 +61,89 @@ if ($total -eq 0) {
 function Convert-TxtToHtml {
     param(
         [string]$filePath,
-        [string]$highlightOption
+        [string]$highlightOption,
+        [string]$keywordOption
     )
 
     $lines = Get-Content -LiteralPath $filePath -Encoding UTF-8
     $fullText = $lines -join "`n"
     $fullText = [System.Net.WebUtility]::HtmlDecode($fullText)
 
+    # ---------------------------------------------------------
+    # [항상 실행] 《...》 내부 배경 강조 배제를 위한 마스킹
+    # ---------------------------------------------------------
+    $regexDoubleAngle = [regex]'《[\s\S]*?》'
+    $match = $regexDoubleAngle.Matches($fullText)
+    $protectedTexts = @()
+
+    foreach ($m in $match) {
+        $protectedTexts += $m.Value
+    }
+
+    for ($i = 0; $i -lt $protectedTexts.Count; $i++) {
+        $placeholder = "___EXCLUDED_DOUBLE_ANGLE_${i}___"
+        $index = $fullText.IndexOf($protectedTexts[$i])
+        if ($index -ge 0) {
+            $fullText = $fullText.Remove($index, $protectedTexts[$i].Length).Insert($index, $placeholder)
+        }
+    }
+
+    $fullText = $fullText.Replace("★", '<span class="star-red">★</span>')
+    $fullText = $fullText.Replace("☆", '<span class="star-red">☆</span>')
+
+    # ---------------------------------------------------------
+    # [1번 질의 분기] 쟁점, 법령, 판례 배경 강조 처리
+    # ---------------------------------------------------------
     if ($highlightOption -eq "Y") {
-        # 1. MatchCollection을 통해 《...》 내부 원본 문자열 추출
-        $regexDoubleAngle = [regex]'《[\s\S]*?》'
-        $matches = $regexDoubleAngle.Matches($fullText)
-        $protectedTexts = @()
-
-        foreach ($m in $matches) {
-            $protectedTexts += $m.Value
-        }
-
-        # 2. 마스킹 진행 (1:1 플레이스홀더 치환)
-        for ($i = 0; $i -lt $protectedTexts.Count; $i++) {
-            $placeholder = "___EXCLUDED_DOUBLE_ANGLE_${i}___"
-            $index = $fullText.IndexOf($protectedTexts[$i])
-            if ($index -ge 0) {
-                $fullText = $fullText.Remove($index, $protectedTexts[$i].Length).Insert($index, $placeholder)
+        $fullText = [regex]::Replace($fullText, '〈([^〉]+)〉', '<span class="case-blue">〈$1〉</span>') #쟁점
+        #법령(조항인용) - HTML 태그 제외
+        $fullText = [regex]::Replace($fullText, '(<[^>]+>)|"([^"]+)"', {
+            param($m)
+            if ($m.Groups[1].Success) {
+                return $m.Groups[1].Value  # 이미 생성된 HTML 태그는 치환하지 않고 원본 유지
             }
-        }
-
-        # 3. 배경 강조 스타일 적용
-        $fullText = $fullText.Replace("★", "<span class='star-red'>★</span>")
-        $fullText = $fullText.Replace("☆", "<span class='star-red'>☆</span>")
-        $fullText = [regex]::Replace($fullText, '〈.*?〉', { param($m) "<span class='case-blue'>$($m.Value)</span>" })
-        $fullText = [regex]::Replace($fullText, '"([^"]+)"', '<span class="quote-purple">"$1"</span>')
-        $fullText = [regex]::Replace($fullText, '「.*?」', { param($m) "<span class='quote-purple'>$($m.Value)</span>" })
-        $fullText = [regex]::Replace($fullText, '“([^”]+)”', '<span class="quote-pink">“$1”</span>')
-
-        # 4. 작은따옴표 소거
-        $fullText = $fullText.Replace([string][char]39, "")
-        $fullText = $fullText.Replace([string][char]0x2018, "")
-        $fullText = $fullText.Replace([string][char]0x2019, "")
-
-        # 5. 마스킹해둔 《...》 원본 복원
-        for ($k = 0; $k -lt $protectedTexts.Count; $k++) {
-            $placeholder = "___EXCLUDED_DOUBLE_ANGLE_${k}___"
-            $restoredContent = $protectedTexts[$k].Replace("`n", "<br>")
-            $fullText = $fullText.Replace($placeholder, $restoredContent)
-        }
+            return "<span class=`"quote-purple`">$($m.Groups[2].Value)</span>" # 본문 큰따옴표 텍스트만 강조 태그로 감쌈
+        })
+        
+        $fullText = [regex]::Replace($fullText, '「([^」]+)」', '<span class="corner-bracket">$1</span>') #법령(전체인용)
+        $fullText = [regex]::Replace($fullText, '“([^”]+)”', '<span class="quote-pink">$1</span>') #판례
     } 
-    else {
-        # N 옵션: 배경 강조 배제 및 모든 특수문자 소거
-        $fullText = $fullText.Replace([string][char]34, "")
-        $fullText = $fullText.Replace([string][char]39, "")
-        $fullText = $fullText.Replace([string][char]0x201C, "")
-        $fullText = $fullText.Replace([string][char]0x201D, "")
-        $fullText = $fullText.Replace([string][char]0x2018, "")
-        $fullText = $fullText.Replace([string][char]0x2019, "")
-        $fullText = $fullText.Replace([string][char]0x3008, "")
-        $fullText = $fullText.Replace([string][char]0x3009, "")
+
+    # ---------------------------------------------------------
+    # [2번 질의 분기] 키워드, 중요 키워드 배경 강조 처리
+    # ---------------------------------------------------------
+    if ($keywordOption -eq "Y") {
+        $fullText = [regex]::Replace($fullText, "'([^']+)'", '<span class="keyword-yellow">$1</span>') #키워드
+        $fullText = [regex]::Replace($fullText, "‘([^’]+)’", '<span class="keyword-gold">$1</span>') #중요키워드
+    }
+
+    #질의와 상관없이 전체 특수문자 삭제(HTML 태그 제외)
+    $fullText = [regex]::Replace($fullText, '(<[^>]+>)|[''""‘’“”〈〉「」]', {
+        param($m)
+        if ($m.Groups[1].Success) {
+            return $m.Groups[1].Value
+        }
+        return ""
+    })
+
+    # $fullText = $fullText.Replace([string][char]39, "")     # ' (작은따옴표)
+    # $fullText = $fullText.Replace([string][char]34, "")     # " (큰따옴표)
+    # $fullText = $fullText.Replace([string][char]0x2018, "") # ‘ (왼쪽 둥근 작은따옴표)
+    # $fullText = $fullText.Replace([string][char]0x2019, "") # ’ (오른쪽 둥근 작은따옴표)
+    # $fullText = $fullText.Replace([string][char]0x201C, "") # “ (왼쪽 둥근 큰따옴표)
+    # $fullText = $fullText.Replace([string][char]0x201D, "") # ” (오른쪽 둥근 큰따옴표)
+    # $fullText = $fullText.Replace([string][char]0x3008, "") # 〈 (홑화살괄호 열기)
+    # $fullText = $fullText.Replace([string][char]0x3009, "") # 〉 (홑화살괄호 닫기)
+    # $fullText = $fullText.Replace([string][char]0x300C, "") # 「 (낫표 열기)
+    # $fullText = $fullText.Replace([string][char]0x300D, "") # 」 (낫표 닫기)
+
+    # ---------------------------------------------------------
+    # [항상 실행] 마스킹해둔 《...》 원본 복원
+    # ---------------------------------------------------------
+    for ($k = 0; $k -lt $protectedTexts.Count; $k++) {
+        $placeholder = "___EXCLUDED_DOUBLE_ANGLE_${k}___"
+        $restoredContent = $protectedTexts[$k].Replace("`n", "<br>")
+        $fullText = $fullText.Replace($placeholder, $restoredContent)
     }
 
     # 개별 행 단위 처리 진행
@@ -121,16 +153,12 @@ function Convert-TxtToHtml {
     foreach ($line in $processedLines) {
         $cleanLine = $line
 
-        $cleanLine = [regex]::Replace($cleanLine, '(<제\d+[^>]*>)', '<span class="chapter">$1</span>')
-        $cleanLine = [regex]::Replace($cleanLine, '(<인사[^>]*>)', '<span class="chapter">$1</span>')
-        $cleanLine = [regex]::Replace($cleanLine, '(<경조[^>]*>)', '<span class="chapter">$1</span>')
-        $cleanLine = [regex]::Replace($cleanLine, '(<보충[^>]*>)', '<span class="chapter">$1</span>')
-        $cleanLine = [regex]::Replace($cleanLine, '(<입문[^>]*>)', '<span class="chapter">$1</span>')
+        $cleanLine = [regex]::Replace($cleanLine, '(<(?:제\d+|인사.|경조.|보충|입문)[^>]*>)', '<span class="chapter">$1</span>')
 
         $cleanTrimmed = $cleanLine.Trim()
 
         if ([string]::IsNullOrEmpty($cleanTrimmed)) {
-            $htmlLines += "<p class='blank-line'>&nbsp;</p>"
+            $htmlLines += "<p class=`"blank-line`">&nbsp;</p>"
             continue
         }
 
@@ -150,10 +178,10 @@ function Convert-TxtToHtml {
         $processedText = [regex]::Replace($processedText, '^( *)(\(\d{1,2}\))', '$1<span class="idx-parenthesis">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])', '$1<span class="idx-circle">$2</span>')
 
-        $htmlLines += "<p class='$pClass'>$processedText</p>"
+        $htmlLines += "<p class=`"$pClass`">$processedText</p>"
     }
 
-    # HTML 구조 정의 (형광펜 기법 적용으로 하단 배경만 정밀 이동)
+    # HTML 구조 정의
     $htmlContent = @"
 <!DOCTYPE html>
 <html>
@@ -161,23 +189,51 @@ function Convert-TxtToHtml {
         <meta charset="UTF-8">
         <style>
             @page { size: A4; margin: 1cm 1.3cm 1cm 1.3cm; }
-            body { font-family: "함초롬돋움", sans-serif; font-size: 7.7pt; line-height: 1.6; margin: 0; padding: 0; }
-            p { margin: 0; padding: 0; white-space: pre-wrap; word-break: break-all; text-align: justify; text-justify: inter-character; }
-            .blank-line { height: 8pt; }
-            .bold-text { font-weight: bold; }
-            .normal-text { font-weight: normal; }
-
-            /*공통 수직 정렬 오차 방지 프로퍼티 정의*/
+            body {  
+                font-family: "함초롬돋움", sans-serif;
+                font-size: 7.7pt;
+                line-height: 1.6;
+                margin: 0;
+                padding: 0;
+            }
+            p {
+                margin: 0;
+                padding: 0;
+                white-space: pre-wrap;
+                word-break: break-all;
+                text-align: justify;
+                text-justify:
+                inter-character;
+            }
             span {
                 vertical-align: baseline;
                 line-height: inherit;
+                display: inline;
             }
 
-            .problem-title { color: #0000FF; font-weight:bold; }
-            .chapter { color: #FF0000; font-weight: bold; }
-            .star-red { color: #FF0000; font-weight:bold; }
+            .blank-line {
+                height: 8pt; 
+            }
+            .bold-text {
+                font-weight: bold;
+            }
+            .normal-text {
+                font-weight: normal;
+            }
+            .problem-title {
+                color: #0000FF;
+                font-weight:bold;
+            }
+            .chapter {
+                color: #FF0000;
+                font-weight: bold;
+            }
+            .star-red {
+                color: #FF0000;
+                font-weight:bold;
+            }
 
-            /*목차 형광펜*/
+            /*목차*/
             .idx-roman {
                 background: linear-gradient(to top, #FF0000 90%, transparent 90%);
                 display: inline;
@@ -189,7 +245,7 @@ function Convert-TxtToHtml {
                 padding-right: 1px;
             }
             .idx-bracket {
-                background: linear-gradient(to top, #FFB400 90%, transparent 90%);
+                background: linear-gradient(to top, #FFC000 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
@@ -205,7 +261,7 @@ function Convert-TxtToHtml {
                 -webkit-box-decoration-break: clone;
                 padding-top: 0.6px;
                 padding-bottom: 1.2px;
-                padding-left: 0.8px;
+                padding-left: 0.5px;
                 padding-right: 1px;
             }
             .idx-circle {
@@ -218,8 +274,7 @@ function Convert-TxtToHtml {
                 padding-left: 1.2px;
                 padding-right: 2.2px;
             }
-
-            /*쟁점 형광펜*/
+            /*쟁점*/
             .case-blue {
                 background: linear-gradient(to top, #CCE0FF 90%, transparent 90%);
                 display: inline;
@@ -230,9 +285,9 @@ function Convert-TxtToHtml {
                 padding-left: 0.5px;
                 padding-right: 0.5px;
             }
-            /*법령 형광펜*/
+            /*법령(조항 인용)*/
             .quote-purple {
-                background: linear-gradient(to top, #C39BE1 90%, transparent 90%);
+                background: linear-gradient(to top, #DCBEFF 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
@@ -241,9 +296,42 @@ function Convert-TxtToHtml {
                 padding-left: 0.5px;
                 padding-right: 0.5px;
             }
-            /*판례 형광펜*/
+            /*법령(전체 인용)*/
+            .corner-bracket {
+                background: linear-gradient(to top, #C382D2 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 0.5px;
+                padding-right: 0.5px;
+            }
+            /*판례*/
             .quote-pink {
                 background: linear-gradient(to top, #FF89FF 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 0.5px;
+                padding-right: 0.5px;
+            }
+            /*키워드*/
+            .keyword-yellow {
+                background: linear-gradient(to top, #FFFC00 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 0.5px;
+                padding-right: 0.5px;
+            }
+            /*중요 키워드*/
+            .keyword-gold {
+                background: linear-gradient(to top, #DCB406 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
@@ -274,8 +362,8 @@ foreach ($file in $files) {
     foreach ($c in [System.IO.Path]::GetInvalidFileNameChars()) { $firstLine = $firstLine.Replace($c, ' ') }
     $firstLine = ($firstLine -replace '\s+', ' ').Trim()
 
-    Write-Host "  1. HTML 변환 및 스타일 가공 (배경 강조: $keepHighlight)" -ForegroundColor Gray
-    $htmlResult = Convert-TxtToHtml $file.FullName $keepHighlight
+    Write-Host "  1. HTML 변환 및 스타일 가공 ([쟁점, 법령(학자), 판례(저술)] 강조 : $keepHighlight, [키워드, 중요 키워드] 강조 : $keepKeywordHighlight)" -ForegroundColor Gray
+    $htmlResult = Convert-TxtToHtml $file.FullName $keepHighlight $keepKeywordHighlight
     
     $tempHtmlPath = Join-Path $folder "$($file.BaseName).html"
     [System.IO.File]::WriteAllText($tempHtmlPath, $htmlResult, [System.Text.Encoding]::UTF8)
@@ -295,6 +383,8 @@ foreach ($file in $files) {
     [void]$psi.ArgumentList.Add("--headless")
     [void]$psi.ArgumentList.Add("--disable-gpu")
     [void]$psi.ArgumentList.Add("--no-pdf-header-footer")
+    [void]$psi.ArgumentList.Add("--print-to-pdf-no-header")
+    [void]$psi.ArgumentList.Add("--enable-print-browser")
     [void]$psi.ArgumentList.Add("--print-to-pdf=$pdfPath")
     [void]$psi.ArgumentList.Add($tempHtmlPath)
 
@@ -303,7 +393,7 @@ foreach ($file in $files) {
     $null = $process.Start()
     $process.WaitForExit()
 
-    Start-Sleep -Milliseconds 300
+    #Start-Sleep -Milliseconds 300
 
     if (Test-Path -LiteralPath $tempHtmlPath) { Remove-Item -LiteralPath $tempHtmlPath -Force }
 
@@ -354,7 +444,7 @@ if (Test-Path -LiteralPath $mergedOutputPath) {
     Write-Host ">> 전체 병합 완료 : $mergedOutputPath"
     
     if ($deleteOriginals -eq "Y") {
-        Write-Host ">> 2. 옵션(Y)에 따라 개별 원본 PDF 파일 청소를 시작합니다."
+        Write-Host ">> 3. 옵션(Y)에 따라 개별 원본 PDF 파일 청소를 시작합니다."
         foreach ($pdf in $mergeList) {
             if (Test-Path -LiteralPath $pdf.FullName) {
                 Remove-Item -LiteralPath $pdf.FullName -Force
@@ -362,7 +452,7 @@ if (Test-Path -LiteralPath $mergedOutputPath) {
         }
         Write-Host ">> 개별 원본 PDF 파일 삭제 완료."
     } else {
-        Write-Host ">> 2. 옵션(N)에 따라 개별 원본 PDF 파일들을 그대로 보존합니다."
+        Write-Host ">> 3. 옵션(N)에 따라 개별 원본 PDF 파일들을 그대로 보존합니다."
     }
 } else {
     Write-Host "[오류] PDF 병합 중 예상치 못한 문제가 발생했습니다." -ForegroundColor Red
@@ -371,3 +461,4 @@ if (Test-Path -LiteralPath $mergedOutputPath) {
 Write-Host "`n=============================================================="
 Write-Host " 모든 자동화 변환 및 제어 공정이 성공적으로 종결되었습니다."
 Write-Host "=============================================================="
+Write-Host ""
