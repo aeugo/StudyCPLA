@@ -118,7 +118,7 @@ function Convert-TxtToHtml {
     }
 
     #질의와 상관없이 전체 특수문자 삭제(HTML 태그 제외)
-    $fullText = [regex]::Replace($fullText, '(<[^>]+>)|[''""‘’“”〈〉「」]', {
+    $fullText = [regex]::Replace($fullText, '(<[^>]+>)|[''""]', {
         param($m)
         if ($m.Groups[1].Success) {
             return $m.Groups[1].Value
@@ -128,14 +128,14 @@ function Convert-TxtToHtml {
 
     # $fullText = $fullText.Replace([string][char]39, "")     # ' (작은따옴표)
     # $fullText = $fullText.Replace([string][char]34, "")     # " (큰따옴표)
-    # $fullText = $fullText.Replace([string][char]0x2018, "") # ‘ (왼쪽 둥근 작은따옴표)
-    # $fullText = $fullText.Replace([string][char]0x2019, "") # ’ (오른쪽 둥근 작은따옴표)
-    # $fullText = $fullText.Replace([string][char]0x201C, "") # “ (왼쪽 둥근 큰따옴표)
-    # $fullText = $fullText.Replace([string][char]0x201D, "") # ” (오른쪽 둥근 큰따옴표)
-    # $fullText = $fullText.Replace([string][char]0x3008, "") # 〈 (홑화살괄호 열기)
-    # $fullText = $fullText.Replace([string][char]0x3009, "") # 〉 (홑화살괄호 닫기)
-    # $fullText = $fullText.Replace([string][char]0x300C, "") # 「 (낫표 열기)
-    # $fullText = $fullText.Replace([string][char]0x300D, "") # 」 (낫표 닫기)
+    $fullText = $fullText.Replace([string][char]0x2018, "") # ‘ (왼쪽 둥근 작은따옴표)
+    $fullText = $fullText.Replace([string][char]0x2019, "") # ’ (오른쪽 둥근 작은따옴표)
+    $fullText = $fullText.Replace([string][char]0x201C, "") # “ (왼쪽 둥근 큰따옴표)
+    $fullText = $fullText.Replace([string][char]0x201D, "") # ” (오른쪽 둥근 큰따옴표)
+    $fullText = $fullText.Replace([string][char]0x3008, "") # 〈 (홑화살괄호 열기)
+    $fullText = $fullText.Replace([string][char]0x3009, "") # 〉 (홑화살괄호 닫기)
+    $fullText = $fullText.Replace([string][char]0x300C, "") # 「 (낫표 열기)
+    $fullText = $fullText.Replace([string][char]0x300D, "") # 」 (낫표 닫기)
 
     # ---------------------------------------------------------
     # [항상 실행] 마스킹해둔 《...》 원본 복원
