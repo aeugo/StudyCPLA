@@ -117,7 +117,7 @@ function Convert-TxtToHtml {
         $fullText = [regex]::Replace($fullText, "‘([^’]+)’", '<span class="keyword-gold">$1</span>') #중요키워드
     }
 
-    #질의와 상관없이 전체 특수문자 삭제(HTML 태그 제외)
+    #질의와 상관없이 특수문자(작은 따옴표(')와 큰 따옴표(")) 삭제(HTML 태그 제외)
     $fullText = [regex]::Replace($fullText, '(<[^>]+>)|[''""]', {
         param($m)
         if ($m.Groups[1].Success) {
@@ -126,8 +126,7 @@ function Convert-TxtToHtml {
         return ""
     })
 
-    # $fullText = $fullText.Replace([string][char]39, "")     # ' (작은따옴표)
-    # $fullText = $fullText.Replace([string][char]34, "")     # " (큰따옴표)
+    #질의와 상관없이 특수문자(작은 따옴표(')와 큰 따옴표(")를 제외한 전체) 삭제
     $fullText = $fullText.Replace([string][char]0x2018, "") # ‘ (왼쪽 둥근 작은따옴표)
     $fullText = $fullText.Replace([string][char]0x2019, "") # ’ (오른쪽 둥근 작은따옴표)
     $fullText = $fullText.Replace([string][char]0x201C, "") # “ (왼쪽 둥근 큰따옴표)
