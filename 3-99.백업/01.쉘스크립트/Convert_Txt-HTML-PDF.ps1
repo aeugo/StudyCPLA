@@ -117,7 +117,7 @@ function Convert-TxtToHtml {
         $fullText = [regex]::Replace($fullText, "‘([^’]+)’", '<span class="keyword-gold">$1</span>') #중요키워드
     }
 
-    #질의와 상관없이 특수문자(',") 삭제(HTML 태그 제외)
+    #질의와 상관없이 특수문자(작은 따옴표(')와 큰 따옴표(")) 삭제(HTML 태그 제외)
     $fullText = [regex]::Replace($fullText, '(<[^>]+>)|[''""]', {
         param($m)
         if ($m.Groups[1].Success) {
@@ -126,7 +126,7 @@ function Convert-TxtToHtml {
         return ""
     })
 
-    #질의와 상관없이 특수문자(',"를 제외한 전체) 삭제
+    #질의와 상관없이 특수문자(작은 따옴표(')와 큰 따옴표(")를 제외한 전체) 삭제
     $fullText = $fullText.Replace([string][char]0x2018, "") # ‘ (왼쪽 둥근 작은따옴표)
     $fullText = $fullText.Replace([string][char]0x2019, "") # ’ (오른쪽 둥근 작은따옴표)
     $fullText = $fullText.Replace([string][char]0x201C, "") # “ (왼쪽 둥근 큰따옴표)
@@ -135,6 +135,9 @@ function Convert-TxtToHtml {
     $fullText = $fullText.Replace([string][char]0x3009, "") # 〉 (홑화살괄호 닫기)
     $fullText = $fullText.Replace([string][char]0x300C, "") # 「 (낫표 열기)
     $fullText = $fullText.Replace([string][char]0x300D, "") # 」 (낫표 닫기)
+
+    $fullText = $fullText.Replace("<img:", "<img src=") # img:를 html태그로 치환
+    $fullText = [regex]::Replace($fullText, '(?i)(<img\b[^>]*>)\s*[\r\n]+(\s*[\r\n]+)*', "`$1`n") # <img ...> 태그 직후에 존재하는 연속 빈 행(공백 행) 일괄 제거
 
     # ---------------------------------------------------------
     # [항상 실행] 마스킹해둔 《...》 원본 복원

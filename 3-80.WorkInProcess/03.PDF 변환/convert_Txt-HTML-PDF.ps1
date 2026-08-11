@@ -136,6 +136,9 @@ function Convert-TxtToHtml {
     $fullText = $fullText.Replace([string][char]0x300C, "") # 「 (낫표 열기)
     $fullText = $fullText.Replace([string][char]0x300D, "") # 」 (낫표 닫기)
 
+    $fullText = $fullText.Replace("<img:", "<img src=") # img:를 html태그로 치환
+    $fullText = [regex]::Replace($fullText, '(?i)(<img\b[^>]*>)\s*[\r\n]+(\s*[\r\n]+)*', "`$1`n") # <img ...> 태그 직후에 존재하는 연속 빈 행(공백 행) 일괄 제거
+
     # ---------------------------------------------------------
     # [항상 실행] 마스킹해둔 《...》 원본 복원
     # ---------------------------------------------------------
