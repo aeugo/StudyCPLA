@@ -22,7 +22,8 @@
         "editor.matchBrackets": "never", //괄호 매치 강조 비활성
         "editor.autoIndent": "none", //자동들여쓰기 비활성
         "editor.stickyScroll.enabled": false, //상단 고정 영역 비활성
-        "editor.guides.indentation": false //들여쓰기 라인 비활성
+        "editor.guides.indentation": false, //들여쓰기 라인 비활성
+        "editor.wrappingIndent": "none" //자동줄바꿈 시 들여쓰기 비활성
     },
     "highlight.regexes": {
         "(?![^《》]*》)('[^']+')" : { //''로 배경 강조(문장)
