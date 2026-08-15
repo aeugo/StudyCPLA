@@ -458,6 +458,7 @@
             ]
         },
     },
+    //----------관련법령 적용 종료----------
     "search.QueryTemplate": "https://search.naver.com/search.naver?query=%SELECTION%", //통합검색
     //노무사 2차 교재 회독용 텍스트 파일 설정_E
 }

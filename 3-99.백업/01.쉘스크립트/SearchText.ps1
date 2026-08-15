@@ -23,13 +23,14 @@ $regexPattern = [regex]::Escape($keyword)
 
 foreach ($file in $files) {
 
-    # UTF-8 기준 텍스트 파일 읽기
-    $lines = Get-Content -LiteralPath $file.FullName -Encoding UTF-8
+    # [수정 핵심] @() 연산자를 사용하여 단일 행 파일도 무조건 문자열 배열로 강제 수집
+    $lines = @(Get-Content -LiteralPath $file.FullName -Encoding UTF-8)
 
     for ($i = 0; $i -lt $lines.Count; $i++) {
 
         $lineText = $lines[$i]
 
+        # $lineText가 무조건 [string] 타입으로 보장되어 Contains 메서드가 정상 구동함
         if ($lineText.Contains($keyword)) {
 
             # 상대 경로 계산
@@ -46,8 +47,8 @@ foreach ($file in $files) {
 
             foreach ($part in $parts) {
                 if ($part -eq $keyword) {
-                    # 검색어 일치 부분: 노란 배경에 빨간 글자(형광펜 효과)로 강조
-                    Write-Host $part -ForegroundColor Red -NoNewline #-BackgroundColor Yellow
+                    # 검색어 일치 부분: 빨간 글자로 강조
+                    Write-Host $part -ForegroundColor Red -NoNewline
                 }
                 else {
                     # 일반 텍스트 부분
