@@ -90,6 +90,7 @@ function Convert-TxtToHtml {
 
     $fullText = $fullText.Replace("★", '<span class="star-red">★</span>')
     $fullText = $fullText.Replace("☆", '<span class="star-red">☆</span>')
+    $fullText = $fullText.Replace("#기출", '<span class="star-red">#기출</span>')
 
     # ---------------------------------------------------------
     # [1번 질의 분기] 쟁점, 법령, 판례 배경 강조 처리
@@ -232,7 +233,6 @@ function Convert-TxtToHtml {
             }
             .star-red {
                 color: #FF0000;
-                font-weight:bold;
             }
 
             /*목차*/
