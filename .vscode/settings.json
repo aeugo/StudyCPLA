@@ -26,6 +26,19 @@
         "editor.wrappingIndent": "none" //자동줄바꿈 시 들여쓰기 비활성
     },
     "highlight.regexes": {
+        "(판\\d*\\))": {
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "backgroundColor": "#FF0000",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 0px 1px 0px"
+                }
+            ]
+        },
         "(?![^《》]*》)('[^']+')" : { //''로 배경 강조(문장)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
@@ -102,7 +115,6 @@
                 }
             ]
         },
-        //"《[^《》]*》|((\\<제\\d+.[^>]+>)|(\\<인사[^>]+>)|(\\<경조[^>]+>)|(\\<보충[>]+>)|(\\<입문[^>]+>))": {
         "《[^《》]*》|(<(?:제\\d+|인사.|경조.|보충|입문)[^>]*>)" : {
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
@@ -113,17 +125,7 @@
                 }
             ]
         },
-        // "(^\\s*－.*?)(?=★|#기출|$)": { //본문 내용(”－”(빼기 아님)로 시작), 별표 제외 //(^\\s*－.*)(?=★|$), (^\\s*－[^★].*)
-        //     "regexFlags": "gm",
-        //     "filterLanguageRegex": "plaintext",
-        //     "decorations": [
-        //         {
-        //             "fontWeight": "normal",
-        //             "color": "#101010" //404040
-        //         }
-        //     ]
-        // },
-        "(^\\s*－.*)": { //본문 전체를 먼저 normal 굵기 및 검은색으로 지정
+        "(^\\s*－.*?)(?=#기출|★|$)": { //본문 내용(”－”(빼기 아님)로 시작), 별표 제외 //(^\\s*－.*)(?=★|$), (^\\s*－[^★].*)
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -133,7 +135,28 @@
                 }
             ]
         },
-        "#기출": { //#기출 부분 강조
+        "(?<=#기출).*?(?=#기출|★|$)": { // 본문 내용 - #기출 이후 부분
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "fontWeight": "normal",
+                    "color": "#101010"
+                }
+            ]
+        },
+        "(#기출)": { // #기출 자체
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "decorations": [
+                {
+                    "color": "#FF0000",
+                    "fontWeight": "normal",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        "(★|☆)": { //별 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
@@ -241,13 +264,16 @@
                 }
             ]
         },
-        "(★)": { //별 강조
+        "\\[\\d+\\] ": { //판례 판시사항, 판결요지 번호
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "decorations": [
                 {
-                    "color": "#FF0000",
-                    "fontWeight": "normal",
+                    "backgroundColor": "#B7CCE4",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 3px 1px 0px",
                     "isWholeLine": false
                 }
             ]

@@ -14,7 +14,7 @@ foreach ($file in $files) {
     # 파일 전체 읽기
     $text = [System.IO.File]::ReadAllText(
         $file.FullName,
-        [System.Text.Encoding]::UTF8
+        [System.Text.Encoding]::Unicode
     )
 
     $original = $text
@@ -29,7 +29,7 @@ foreach ($file in $files) {
         [System.IO.File]::WriteAllText(
             $file.FullName,
             $text,
-            [System.Text.Encoding]::UTF8
+            [System.Text.Encoding]::Unicode
         )
 
         Write-Host "수정 : $($file.Name)" -ForegroundColor Yellow

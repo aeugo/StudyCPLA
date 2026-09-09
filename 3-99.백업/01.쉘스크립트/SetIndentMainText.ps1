@@ -152,7 +152,7 @@ foreach($file in $files){
     [System.IO.File]::WriteAllText(
         $savePath,
         $output,
-        [System.Text.Encoding]::UTF8
+        [System.Text.Encoding]::Unicode
     )
 
 }
