@@ -1,8 +1,18 @@
-﻿param(
+﻿# param(
+#     [string]$filePath
+# )
+
+# if (!(Test-Path $filePath)) { exit }
+
+param(
+    [Parameter(Mandatory = $true)]
     [string]$filePath
 )
 
-if (!(Test-Path $filePath)) { exit }
+if (!(Test-Path -LiteralPath $filePath)) {
+    Write-Error "지정한 파일이 존재하지 않습니다 : $filePath"
+    exit
+}
 
 $text = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::Unicode)
 

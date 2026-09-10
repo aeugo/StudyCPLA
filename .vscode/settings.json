@@ -29,8 +29,10 @@
         "(판\\d*\\))": {
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
+
                     "backgroundColor": "#FF0000",
                     "color": "#000000",
                     "borderStyle": "solid",
