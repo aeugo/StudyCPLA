@@ -8,19 +8,23 @@ if (!(Test-Path -LiteralPath $filePath)) {
     exit
 }
 
+# ------------------------------------------------------
 # 1. 파일 읽기 및 기본 텍스트 정제
+# ------------------------------------------------------
 $text = [System.IO.File]::ReadAllText($filePath, [System.Text.Encoding]::Unicode)
 
 # 줄바꿈 단일화 (\r\n, \r -> \n)
 $text = $text -replace "`r`n", "`n"
 $text = $text -replace "`r", "`n"
+$text = $text -replace "·", "・" # U+00B7(·) -> U+30FB(・)
 
 # 특수문자 치환 (요청 구문 적용)
 $text = $text -replace ""“", "‘"
 $text = $text -replace ""”", "’"
 $text = $text.Replace([char]0x318D, [char]0x30FB) # U+318D(ㆍ) -> U+30FB(・)
+$text = $text.Replace([char]0x00B7, [char]0x30FB) # U+00B7(·) -> U+30FB(・)
 
-$lines = $text -split "`n"
+$lines = [System.Collections.Generic.List[string]]::new(($text -split "`n"))
 
 if ($lines.Count -eq 0) {
     Write-Host "처리할 내용이 없습니다." -ForegroundColor Yellow
@@ -28,21 +32,22 @@ if ($lines.Count -eq 0) {
 }
 
 # ------------------------------------------------------
-# 2. 첫 줄(법령명) 〈 〉 처리
+# 2. 첫 행의 빈 행 삭제 및 첫 줄(법령명) 〈 〉 처리
 # ------------------------------------------------------
-$firstTextIndex = -1
-for ($i = 0; $i -lt $lines.Count; $i++) {
-    if ($lines[$i].Trim() -ne "") {
-        $firstTextIndex = $i
-        break
-    }
+# 파일 최상단에 있는 빈 행들을 탐색하여 제거
+while ($lines.Count -gt 0 -and $lines[0].Trim() -eq "") {
+    $lines.RemoveAt(0)
 }
 
-if ($firstTextIndex -ne -1) {
-    $firstText = $lines[$firstTextIndex].Trim()
+# 빈 행 제거 후 유효한 첫 행이 존재하는 경우 〈 〉 감싸기 처리
+if ($lines.Count -gt 0) {
+    $firstText = $lines[0].Trim()
     if (-not $firstText.StartsWith("〈")) {
-        $lines[$firstTextIndex] = "〈" + $firstText + "〉"
+        $lines[0] = "〈" + $firstText + "〉"
     }
+} else {
+    Write-Host "처리할 내용이 없습니다." -ForegroundColor Yellow
+    exit
 }
 
 # ------------------------------------------------------
