@@ -53,6 +53,10 @@ foreach ($roman in @(
 
 $text = $text.Replace("`n<", "`n`n<")
 
+foreach($i in 1..10){
+    $text = $text.Replace("[$i].","  $i.")
+}
+
 foreach ($i in 1..10) {
     $text = $text.Replace("$i.", "  $i.")
 }
