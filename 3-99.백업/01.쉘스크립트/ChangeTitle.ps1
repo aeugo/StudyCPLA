@@ -14,7 +14,7 @@ Get-ChildItem -Path . -Filter "*.txt" -File | ForEach-Object {
 
         if ($lines.Count -gt 0) {
             # 첫 번째 줄의 ".01>" 문자열을 ".00>"로 치환
-            $lines[0] =$lines[0] -replace '\.00>', '.01>'
+            $lines[0] =$lines[0] -replace '\.01>', '.00>'
             
             # 원본 파일의 개행 문자열(CRLF)을 유지하면서 하나의 텍스트로 결합
             $newContent =$lines -join "`r`n"

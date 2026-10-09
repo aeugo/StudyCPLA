@@ -180,6 +180,30 @@ function Convert-TxtToHtml {
         $processedText = [regex]::Replace($processedText, '^( *)(\d{1,2}\.)', '$1<span class="idx-bracket">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)(\(\d{1,2}\))', '$1<span class="idx-parenthesis">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])', '$1<span class="idx-circle">$2</span>')
+        $processedText = [regex]::Replace($processedText, '^( *)([㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻])', '$1<span class="idx-circle2">$2</span>')
+        $processedText = [regex]::Replace($processedText, '^( *)([㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩㉪㉫㉬㉭])', '$1<span class="idx-circle3">$2</span>')
+
+        # ---------------------------------------------------------
+        # [우선순위 치환] 1. 판결요지 [1], [2] 배경 강조
+        # ---------------------------------------------------------
+        $processedText = [regex]::Replace($processedText, '(<[^>]+>)|(\[\d+\])', {
+            param($m)
+            if ($m.Groups[1].Success) {
+                return $m.Groups[1].Value
+            }
+            return "<span class=`"case-num-bg`">$($m.Groups[2].Value)</span>"
+        })
+
+        # ---------------------------------------------------------
+        # [우선순위 치환] 2. 나머지 대괄호([법령 등]) 파란색 강조
+        # ---------------------------------------------------------
+        $processedText = [regex]::Replace($processedText, '(<[^>]+>)|(\[[^\]]+\])', {
+            param($m)
+            if ($m.Groups[1].Success) {
+                return $m.Groups[1].Value
+            }
+            return "<span class=`"statute-blue`">$($m.Groups[2].Value)</span>"
+        })
 
         $htmlLines += "<p class=`"$pClass`">$processedText</p>"
     }
@@ -235,6 +259,22 @@ function Convert-TxtToHtml {
                 color: #FF0000;
             }
 
+            /* 목차 내 대괄호 파란색 강조 */
+            .statute-blue {
+                color: #0000FF;
+                font-weight: bold;
+            }
+            /* 판결요지 번호 [1], [2] 배경색 강조 */
+            .case-num-bg {
+                background: linear-gradient(to top, #B7CCE4 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.6px;
+                padding-bottom: 1.2px;
+                padding-left: 0.5px;
+                padding-right: 1px;
+            }
             /*목차*/
             .idx-roman {
                 background: linear-gradient(to top, #FF0000 90%, transparent 90%);
@@ -276,6 +316,27 @@ function Convert-TxtToHtml {
                 padding-left: 1.2px;
                 padding-right: 2.2px;
             }
+            .idx-circle2 {
+                background: linear-gradient(to top, #E2E2E2 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 1.2px;
+                padding-right: 2.2px;
+            }
+            .idx-circle3 {
+                background: linear-gradient(to top, #FFE0CC 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 1.2px;
+                padding-right: 2.2px;
+            }
+
             /*쟁점*/
             .case-blue {
                 background: linear-gradient(to top, #CCE0FF 90%, transparent 90%);
@@ -411,7 +472,7 @@ foreach ($file in $files) {
 # -------------------------------------------------------------
 # [단계 3] Ghostscript 활용 PDF 병합
 # -------------------------------------------------------------
-Write-Host "`n[단계 3] Ghostscript 결합 및 병합 작업 시작..."
+Write-Host "[단계 3] Ghostscript 결합 및 병합 작업 시작..."
 
 $mergeList = Get-ChildItem -LiteralPath $afterFolder -Filter *.pdf | 
              Where-Object { $_.FullName -ne $mergedOutputPath } | 
@@ -460,7 +521,6 @@ if (Test-Path -LiteralPath $mergedOutputPath) {
     Write-Host "[오류] PDF 병합 중 예상치 못한 문제가 발생했습니다." -ForegroundColor Red
 }
 
-Write-Host "`n=============================================================="
+Write-Host "=============================================================="
 Write-Host " 모든 자동화 변환 및 제어 공정이 성공적으로 종결되었습니다."
 Write-Host "=============================================================="
-Write-Host ""
