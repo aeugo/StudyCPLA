@@ -283,13 +283,28 @@
                 }
             ]
         },
+        "《[^《》]*》|(\\ [ⓐ-ⓩ]\\ )": { //원영문 목차 배경 강조
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+            "decorations": [
+                {
+                    "backgroundColor": "#CCE0FF",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 1px 1px 2px",
+                    "isWholeLine": false
+                }
+            ]
+        },
         "《[^《》]*》|(\\[[^\\]]+\\])": { //목차의 법 조문 번호 강조([])
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
-                    "color": "#0000FF"
+                    "color": "#009999"
                     // "fontWeight": "normal"
                 }
             ]
@@ -316,7 +331,7 @@
             "filterFileRegex": "관련법령",
             "decorations": [
                 {
-                    "color": "#0000FF",
+                    "color": "#0099FF", //
                     "fontWeight": "normal"
                 }
             ]

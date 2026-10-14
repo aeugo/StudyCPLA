@@ -46,6 +46,8 @@ $text =$text.Replace("`n<", "`n`n<")
 # [1].~[10]. 목차 기호 치환 (행두 기반 정규표현식)
 $text = [regex]::Replace($text, '(?m)^\s*\[(\d+)\]\.', '  $1.')
 
+# 판례일자 뒤의 쉼표(,)를 마침표(.)로 변경 (예: 대판 1998.12.17, 97다39216 -> 대판 1998.12.17. 97다39216)
+$text = [regex]::Replace($text, '(\d{4}\.\d{1,2}\.\d{1,2}),(\s*\d+)', '$1.$2')
 
 # ==========================================================
 # FormatHierarchicalIndentation() 들여쓰기 정렬
@@ -54,7 +56,8 @@ $text = [regex]::Replace($text, '(?m)^\s*\[(\d+)\]\.', '  $1.')
 $lines = $text -split "`n"
 $result = New-Object System.Collections.Generic.List[string]
 
-$currentIndent = 0$previousTitleType = ""
+$currentIndent = 0
+$previousTitleType = ""
 
 foreach ($line in $lines) {
 
@@ -136,8 +139,11 @@ foreach ($line in $lines) {
         $indent = 10;
         $currentIndent = 10;
         $isTitle =$true;
+    }elseif ($clean -match '^[ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ]') {
+        $indent = 12;
+        $currentIndent = 12;
+        $isTitle =$true;
     }
-
     # ------------------------------------------------------
     # 제목인 경우
     # ------------------------------------------------------

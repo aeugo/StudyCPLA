@@ -139,7 +139,7 @@ function Convert-TxtToHtml {
             }
 
             .quote-blue {
-                color: #0000FF;
+                color: #0099FF;
                 display: inline;
             }
 

@@ -182,9 +182,10 @@ function Convert-TxtToHtml {
         $processedText = [regex]::Replace($processedText, '^( *)([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])', '$1<span class="idx-circle">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)([㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻])', '$1<span class="idx-circle2">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)([㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩㉪㉫㉬㉭])', '$1<span class="idx-circle3">$2</span>')
+        $processedText = [regex]::Replace($processedText, '^( *)([ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ])', '$1<span class="idx-circle4">$2</span>')
 
         # ---------------------------------------------------------
-        # [우선순위 치환] 1. 판결요지 [1], [2] 배경 강조
+        # [우선순위 치환] 1. 판결요지([1], [2]) 배경 강조
         # ---------------------------------------------------------
         $processedText = [regex]::Replace($processedText, '(<[^>]+>)|(\[\d+\])', {
             param($m)
@@ -194,16 +195,30 @@ function Convert-TxtToHtml {
             return "<span class=`"case-num-bg`">$($m.Groups[2].Value)</span>"
         })
 
+        # # ---------------------------------------------------------
+        # # [우선순위 치환] 2. 목차의 법 조문 번호 강조([]) 파란색 강조
+        # # ---------------------------------------------------------
+        # $processedText = [regex]::Replace($processedText, '(<[^>]+>)|(\[[^\]]+\])', {
+        #     param($m)
+        #     if ($m.Groups[1].Success) {
+        #         return $m.Groups[1].Value
+        #     }
+        #     return "<span class=`"statute-blue`">$($m.Groups[2].Value)</span>"
+        # })
+
         # ---------------------------------------------------------
-        # [우선순위 치환] 2. 나머지 대괄호([법령 등]) 파란색 강조
+        # [우선순위 치환] 2. 목차 라인(로마숫자 등으로 시작하는 행)에 포함된 법 조문 번호 대괄호만 파란색 강조
+        # (본문 내 텍스트는 제외)
         # ---------------------------------------------------------
-        $processedText = [regex]::Replace($processedText, '(<[^>]+>)|(\[[^\]]+\])', {
-            param($m)
-            if ($m.Groups[1].Success) {
-                return $m.Groups[1].Value
-            }
-            return "<span class=`"statute-blue`">$($m.Groups[2].Value)</span>"
-        })
+        if ($cleanTrimmed -match '^([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]+\.|\d+\.|\(\d+\)|[①②③④⑤⑥⑦⑧⑨⑩]|[㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻]|[㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩]|[ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ])') {
+            $processedText = [regex]::Replace($processedText, '(<[^>]+>)|(\[[^\]]+\])', {
+                param($m)
+                if ($m.Groups[1].Success) {
+                    return $m.Groups[1].Value
+                }
+                return "<span class=`"statute-blue`">$($m.Groups[2].Value)</span>"
+            })
+        }
 
         $htmlLines += "<p class=`"$pClass`">$processedText</p>"
     }
@@ -246,6 +261,7 @@ function Convert-TxtToHtml {
             }
             .normal-text {
                 font-weight: normal;
+                color: "#000000";
             }
             .problem-title {
                 color: #0000FF;
@@ -259,10 +275,9 @@ function Convert-TxtToHtml {
                 color: #FF0000;
             }
 
-            /* 목차 내 대괄호 파란색 강조 */
+            /* 목차 내 대괄호(법령번호) 파란색 강조 */
             .statute-blue {
-                color: #0000FF;
-                font-weight: bold;
+                color: #009999;
             }
             /* 판결요지 번호 [1], [2] 배경색 강조 */
             .case-num-bg {
@@ -328,6 +343,16 @@ function Convert-TxtToHtml {
             }
             .idx-circle3 {
                 background: linear-gradient(to top, #FFE0CC 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 1.2px;
+                padding-right: 2.2px;
+            }
+            .idx-circle4 {
+                background: linear-gradient(to top, #CCE0FF 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
