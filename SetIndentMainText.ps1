@@ -34,7 +34,8 @@ while ($text.Contains('▶')) {
 $text =$text.Replace([char]0x318D, [char]0x30FB)
 $text =$text.Replace("·", [char]0x30FB)
 
-foreach ($i in 2..9) {$text = $text.Replace("제${i}관", "`n제${i}관")
+foreach ($i in 2..9) {
+    $text = $text.Replace("제${i}관", "`n제${i}관")
 }
 
 foreach ($roman in @("Ⅱ.", "Ⅲ.", "Ⅳ.", "Ⅴ.", "Ⅵ.", "Ⅶ.", "Ⅷ.", "Ⅸ.", "Ⅹ.")) {
@@ -46,7 +47,7 @@ $text =$text.Replace("`n<", "`n`n<")
 # [1].~[10]. 목차 기호 치환 (행두 기반 정규표현식)
 $text = [regex]::Replace($text, '(?m)^\s*\[(\d+)\]\.', '  $1.')
 
-# 판례일자 뒤의 쉼표(,)를 마침표(.)로 변경 (예: 대판 1998.12.17, 97다39216 -> 대판 1998.12.17. 97다39216)
+# 판례일자 뒤의 쉼표(,)를 마침표(.)로 변경
 $text = [regex]::Replace($text, '(\d{4}\.\d{1,2}\.\d{1,2}),(\s*\d+)', '$1.$2')
 
 # ==========================================================
@@ -61,7 +62,7 @@ $previousTitleType = ""
 
 foreach ($line in $lines) {
 
-    $clean =$line.Trim()
+    $clean = $line.Trim()
 
     # 빈 행 통과
     if ($clean -eq "") {
@@ -73,19 +74,22 @@ foreach ($line in $lines) {
     # ------------------------------------------------------
     $currentTitleType = ""
 
-    if ($clean -match '^<[^>]+>') {$currentTitleType = "Angle"
+    if ($clean -match '^<[^>]+>') {
+        $currentTitleType = "Angle"
     }
     elseif ($clean -match '^제\d+관') {
         $currentTitleType = "Article"
     }
     elseif ($clean -match '^[ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]') {
-        if ($clean -match '^Ⅰ') {$currentTitleType = "Roman1"
+        if ($clean -match '^Ⅰ') {
+            $currentTitleType = "Roman1"
         }
         else {
             $currentTitleType = "Roman"
         }
     }
-    elseif ($clean -match '^\d+\.\s') {$currentTitleType = "Number"
+    elseif ($clean -match '^\d+\.\s') {
+        $currentTitleType = "Number"
     }
     elseif ($clean -match '^\(\d+\)') {
         $currentTitleType = "Parenthesis"
@@ -98,51 +102,51 @@ foreach ($line in $lines) {
     # 들여쓰기 깊이 결정
     # ------------------------------------------------------
     $indent = 0;
-    $isTitle =$false;
+    $isTitle = $false;
 
     if ($clean -match '^<[^>]+>') {
         $indent = 0;
         $currentIndent = 0;
-        $isTitle =$true;
+        $isTitle = $true;
     }
     elseif ($clean -match '^제\d+관') {
         $indent = 0;
         $currentIndent = 0;
-        $isTitle =$true;
+        $isTitle = $true;
     }
     elseif ($clean -match '^[ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]') {
         $indent = 0;
         $currentIndent = 0;
-        $isTitle =$true;
+        $isTitle = $true;
     }
     elseif ($clean -match '^\d+\.\s') {
         $indent = 2;
         $currentIndent = 2;
-        $isTitle =$true;
+        $isTitle = $true;
     }
     elseif ($clean -match '^\(\d+\)') {
         $indent = 4;
         $currentIndent = 4;
-        $isTitle =$true;
+        $isTitle = $true;
     }
     elseif ($clean -match '^[①②③④⑤⑥⑦⑧⑨⑩]') {
         $indent = 6;
         $currentIndent = 6;
-        $isTitle =$true;
+        $isTitle = $true;
     }
     elseif ($clean -match '^[㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻]') {
         $indent = 8;
         $currentIndent = 8;
-        $isTitle =$true;
+        $isTitle = $true;
     }
     elseif ($clean -match '^[㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩㉪㉫㉬㉭]') {
         $indent = 10;
         $currentIndent = 10;
-        $isTitle =$true;
+        $isTitle = $true;
     }elseif ($clean -match '^[ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ]') {
         $indent = 12;
         $currentIndent = 12;
-        $isTitle =$true;
+        $isTitle = $true;
     }
     # ------------------------------------------------------
     # 제목인 경우
@@ -178,7 +182,7 @@ foreach ($line in $lines) {
     # 직전 제목 종류 저장 (본문이 나오면 관계를 끊음)
     # ------------------------------------------------------
     if ($isTitle) {
-        $previousTitleType =$currentTitleType;
+        $previousTitleType = $currentTitleType;
     }
     else {
         $previousTitleType = "";
@@ -190,7 +194,7 @@ foreach ($line in $lines) {
 # 파일 저장 (UTF-16 LE 인코딩 유지)
 # ==========================================================
 
-$output =$result -join "`r`n"
+$output = $result -join "`r`n"
 
 [System.IO.File]::WriteAllText(
     $filePath,$output,
