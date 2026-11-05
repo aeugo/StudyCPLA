@@ -238,21 +238,21 @@
                 }
             ]
         },
-        "《[^《》]*》|(첫째,|둘째,|셋째,|넷째,|다섯째,|여섯째,|일곱째,|여덟째,|아홉째,|열째,)": { //문장 내 첫째, 둘째, 셋쩨... 배경 강조
-            "regexFlags": "gm",
-            "filterLanguageRegex": "plaintext",
-            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
-            "decorations": [
-                {
-                    "backgroundColor": "#8CDBF8",
-                    "color": "#000000",
-                    "borderStyle": "solid",
-                    "borderColor": "#FFFFFF",
-                    "borderWidth": "3px 0px 1px 0px",
-                    "isWholeLine": false
-                }
-            ]
-        },
+        // "《[^《》]*》|(첫째,|둘째,|셋째,|넷째,|다섯째,|여섯째,|일곱째,|여덟째,|아홉째,|열째,)": { //문장 내 첫째, 둘째, 셋쩨... 배경 강조
+        //     "regexFlags": "gm",
+        //     "filterLanguageRegex": "plaintext",
+        //     "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+        //     "decorations": [
+        //         {
+        //             "backgroundColor": "#8CDBF8",
+        //             "color": "#000000",
+        //             "borderStyle": "solid",
+        //             "borderColor": "#FFFFFF",
+        //             "borderWidth": "3px 0px 1px 0px",
+        //             "isWholeLine": false
+        //         }
+        //     ]
+        // },
         "《[^《》]*》|(\\ [㉮-㉻]\\ )": { //원모음 목차 배경 강조
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
@@ -290,6 +290,21 @@
             "decorations": [
                 {
                     "backgroundColor": "#CCE0FF",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 1px 1px 2px",
+                    "isWholeLine": false
+                }
+            ]
+        },
+        "《[^《》]*》|(\\ [⒜-⒵]\\ )": { //괄호영문 목차 배경 강조
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+            "decorations": [
+                {
+                    "backgroundColor": "#E2EFDA",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",

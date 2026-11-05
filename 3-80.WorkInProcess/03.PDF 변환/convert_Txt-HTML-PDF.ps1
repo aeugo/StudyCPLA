@@ -183,6 +183,7 @@ function Convert-TxtToHtml {
         $processedText = [regex]::Replace($processedText, '^( *)([㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻])', '$1<span class="idx-circle2">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)([㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩㉪㉫㉬㉭])', '$1<span class="idx-circle3">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)([ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ])', '$1<span class="idx-circle4">$2</span>')
+        $processedText = [regex]::Replace($processedText, '^( *)([⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵])', '$1<span class="idx-circle5">$2</span>') #괄호영어
 
         # ---------------------------------------------------------
         # [우선순위 치환] 1. 판결요지([1], [2]) 배경 강조
@@ -210,7 +211,7 @@ function Convert-TxtToHtml {
         # [우선순위 치환] 2. 목차 라인(로마숫자 등으로 시작하는 행)에 포함된 법 조문 번호 대괄호만 파란색 강조
         # (본문 내 텍스트는 제외)
         # ---------------------------------------------------------
-        if ($cleanTrimmed -match '^([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]+\.|\d+\.|\(\d+\)|[①②③④⑤⑥⑦⑧⑨⑩]|[㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻]|[㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩]|[ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ])') {
+        if ($cleanTrimmed -match '^([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]+\.|\d+\.|\(\d+\)|[①②③④⑤⑥⑦⑧⑨⑩]|[㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻]|[㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩]|[ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ]|[⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵])') {
             $processedText = [regex]::Replace($processedText, '(<[^>]+>)|(\[[^\]]+\])', {
                 param($m)
                 if ($m.Groups[1].Success) {
@@ -353,6 +354,16 @@ function Convert-TxtToHtml {
             }
             .idx-circle4 {
                 background: linear-gradient(to top, #CCE0FF 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 1.2px;
+                padding-right: 2.2px;
+            }
+            .idx-circle5 {
+                background: linear-gradient(to top, #E2EFDA 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;

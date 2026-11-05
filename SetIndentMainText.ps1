@@ -147,6 +147,14 @@ foreach ($line in $lines) {
         $indent = 12;
         $currentIndent = 12;
         $isTitle = $true;
+    }elseif ($clean -match '^[⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵]') {
+        $indent = 14;
+        $currentIndent = 14;
+        $isTitle = $true;
+    }elseif ($clean -match '^[ａ.ｂ.ｃ.ｄ.ｅ.ｆ.ｇ.ｈ.ｉ.ｊ.ｋ.ｌ.ｍ.ｎ.ｏ.ｐ.ｑ.ｒ.ｓ.ｔ.ｕ.ｖ.ｗ.ｘ.ｙ.ｚ.]') {
+        $indent = 16;
+        $currentIndent = 16;
+        $isTitle = $true;
     }
     # ------------------------------------------------------
     # 제목인 경우
