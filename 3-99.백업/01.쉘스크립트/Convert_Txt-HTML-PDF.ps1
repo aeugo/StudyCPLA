@@ -179,11 +179,12 @@ function Convert-TxtToHtml {
         $processedText = [regex]::Replace($processedText, '^( *)([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]+\.)', '$1<span class="idx-roman">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)(\d{1,2}\.)', '$1<span class="idx-bracket">$2</span>')
         $processedText = [regex]::Replace($processedText, '^( *)(\(\d{1,2}\))', '$1<span class="idx-parenthesis">$2</span>')
-        $processedText = [regex]::Replace($processedText, '^( *)([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])', '$1<span class="idx-circle">$2</span>')
-        $processedText = [regex]::Replace($processedText, '^( *)([㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻])', '$1<span class="idx-circle2">$2</span>')
-        $processedText = [regex]::Replace($processedText, '^( *)([㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩㉪㉫㉬㉭])', '$1<span class="idx-circle3">$2</span>')
-        $processedText = [regex]::Replace($processedText, '^( *)([ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ])', '$1<span class="idx-circle4">$2</span>')
-        $processedText = [regex]::Replace($processedText, '^( *)([⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵])', '$1<span class="idx-circle5">$2</span>') #괄호영어
+        $processedText = [regex]::Replace($processedText, '^( *)([①-⑳])', '$1<span class="idx-circle">$2</span>')
+        $processedText = [regex]::Replace($processedText, '^( *)([㉮-㉻])', '$1<span class="idx-circle2">$2</span>')
+        $processedText = [regex]::Replace($processedText, '^( *)([㉠-㉭])', '$1<span class="idx-circle3">$2</span>') #원자음
+        $processedText = [regex]::Replace($processedText, '^( *)([ⓐ-ⓩ])', '$1<span class="idx-circle4">$2</span>') #원영문
+        $processedText = [regex]::Replace($processedText, '^( *)([⒜-⒵])', '$1<span class="idx-circle5">$2</span>') #괄호영문
+        $processedText = [regex]::Replace($processedText, '^( *)([ａ-ｚ])', '$1<span class="idx-circle6">$2</span>') #특수문자영문
 
         # ---------------------------------------------------------
         # [우선순위 치환] 1. 판결요지([1], [2]) 배경 강조
@@ -211,7 +212,7 @@ function Convert-TxtToHtml {
         # [우선순위 치환] 2. 목차 라인(로마숫자 등으로 시작하는 행)에 포함된 법 조문 번호 대괄호만 파란색 강조
         # (본문 내 텍스트는 제외)
         # ---------------------------------------------------------
-        if ($cleanTrimmed -match '^([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]+\.|\d+\.|\(\d+\)|[①②③④⑤⑥⑦⑧⑨⑩]|[㉮㉯㉰㉱㉲㉳㉴㉵㉶㉷㉸㉹㉺㉻]|[㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩]|[ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ]|[⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵])') {
+        if ($cleanTrimmed -match '^([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]+\.|\d+\.|\(\d+\)|[①-⑳]|[㉮-㉻]|[㉠-㉭|[ⓐ-ⓩ]|[⒜-⒵][ａ-ｚ])') {
             $processedText = [regex]::Replace($processedText, '(<[^>]+>)|(\[[^\]]+\])', {
                 param($m)
                 if ($m.Groups[1].Success) {
@@ -342,8 +343,9 @@ function Convert-TxtToHtml {
                 padding-left: 1.2px;
                 padding-right: 2.2px;
             }
+            /*원자음*/
             .idx-circle3 {
-                background: linear-gradient(to top, #FFE0CC 90%, transparent 90%);
+                background: linear-gradient(to top, #FFE1FF 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
@@ -352,8 +354,9 @@ function Convert-TxtToHtml {
                 padding-left: 1.2px;
                 padding-right: 2.2px;
             }
+            /*원영문*/
             .idx-circle4 {
-                background: linear-gradient(to top, #CCE0FF 90%, transparent 90%);
+                background: linear-gradient(to top, #C6E0B4 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;
@@ -362,8 +365,20 @@ function Convert-TxtToHtml {
                 padding-left: 1.2px;
                 padding-right: 2.2px;
             }
+            /*괄호영문*/
             .idx-circle5 {
-                background: linear-gradient(to top, #E2EFDA 90%, transparent 90%);
+                background: linear-gradient(to top, #CCFFFF 90%, transparent 90%);
+                display: inline;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+                padding-top: 0.8px;
+                padding-bottom: 1.2px;
+                padding-left: 1.2px;
+                padding-right: 2.2px;
+            }
+            /*특수문자영문*/
+            .idx-circle6 {
+                background: linear-gradient(to top, #ECD9FF 90%, transparent 90%);
                 display: inline;
                 box-decoration-break: clone;
                 -webkit-box-decoration-break: clone;

@@ -274,7 +274,7 @@
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
-                    "backgroundColor": "#FFE0CC",
+                    "backgroundColor": "#FFE1FF",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
@@ -289,7 +289,7 @@
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
-                    "backgroundColor": "#CCE0FF",
+                    "backgroundColor": "#C6E0B4",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
@@ -304,7 +304,7 @@
             "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
             "decorations": [
                 {
-                    "backgroundColor": "#E2EFDA",
+                    "backgroundColor": "#CCFFFF",
                     "color": "#000000",
                     "borderStyle": "solid",
                     "borderColor": "#FFFFFF",
@@ -313,6 +313,21 @@
                 }
             ]
         },
+        "《[^《》]*》|(\\ [ａ-ｚ]\\ )": { //특수문자영문 목차 배경 강조
+            "regexFlags": "gm",
+            "filterLanguageRegex": "plaintext",
+            "filterFileRegex": "^((?!관련법령).)*$", //관련법령 폴더 제외
+            "decorations": [
+                {
+                    "backgroundColor": "#ECD9FF",
+                    "color": "#000000",
+                    "borderStyle": "solid",
+                    "borderColor": "#FFFFFF",
+                    "borderWidth": "3px 1px 1px 2px",
+                    "isWholeLine": false
+                }
+            ]
+        },        
         "《[^《》]*》|(\\[[^\\]]+\\])": { //목차의 법 조문 번호 강조([])
             "regexFlags": "gm",
             "filterLanguageRegex": "plaintext",
